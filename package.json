@@ -1,0 +1,29 @@
+{
+  "name": "craftia-renderer",
+  "version": "0.0.0",
+  "description": "WebGL-based rendering engine for the image editing application \"craftia\"",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/**/*.ts\" && eslint --fix --ext .ts src"
+  },
+  "author": "Matsumoto Yusei",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/gl-matrix": "^3.2.0",
+    "gl-matrix": "^3.4.3"
+  }
+}
