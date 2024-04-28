@@ -1,5 +1,5 @@
-import { Shader } from '../core'
-import { ShaderOptions } from '../types/Shaders'
+import { Shader } from '../core/shader'
+import { type ShaderOptions } from '../types/Shaders'
 import { darkenBlend } from './blendings/darkenBlend'
 import { hardLightBlend } from './blendings/hardLightBlend'
 import { multiplyBlend } from './blendings/multiplyBlend'
@@ -10,6 +10,37 @@ import { sourceOverComp } from './compositings/sourceOverComp'
 import { fragTemplate } from './fragTemplate'
 import { vertTemplate } from './vertTemplate'
 import { UniformGroup } from '../core/uniforms/UniformGroup'
+import { colorBlend } from './blendings/colorBlend'
+import { colorBurnBlend } from './blendings/colorBurnBlend'
+import { colorDodgeBlend } from './blendings/colorDodgeBlend'
+import { differenceBlend } from './blendings/differenceBlend'
+import { exclusionBlend } from './blendings/exclusionBlend'
+import { hueBlend } from './blendings/hueBlend'
+import { lightenBlend } from './blendings/lightenBlend'
+import { luminosityBlend } from './blendings/luminosityBlend'
+import { saturationBlend } from './blendings/saturationBlend'
+import { softLightBlend } from './blendings/softLightBlend'
+import { clearComp } from './compositings/clearComp'
+import { destinationAtopComp } from './compositings/destinationAtopComp'
+import { destinationComp } from './compositings/destinationComp'
+import { destinationInComp } from './compositings/destinationInComp'
+import { destinationOutComp } from './compositings/destinationOutComp'
+import { destinationOverComp } from './compositings/destinationOverComp'
+import { sourceAtopComp } from './compositings/sourceAtopComp'
+import { sourceInComp } from './compositings/sourceInComp'
+import { sourceOutComp } from './compositings/sourceOutComp'
+import { xorComp } from './compositings/xorComp'
+import { lighterComp } from './compositings/lighterComp'
+import { linearBurnBlend } from './blendings/linearBurnBlend'
+import { linearDodgeBlend } from './blendings/linearDodgeBlend'
+import { linearLightBlend } from './blendings/linearLightBlend'
+import { pinLightBlend } from './blendings/pinLightBlend'
+import { vividLightBlend } from './blendings/vividLightBlend'
+import { hardMixBlend } from './blendings/hardMixBlend'
+import { colorDarkerBlend } from './blendings/colorDarkerBlend'
+import { colorLighterBlend } from './blendings/colorLighterBlend'
+import { subtractBlend } from './blendings/subtractBlend'
+import { divideBlend } from './blendings/divideBlend'
 
 export type BlendModeProps = {
     key: string
@@ -74,11 +105,51 @@ export class BlendMode {
     }
 }
 
+// prettier-ignore
 export const BLEND_MODES = {
-    darken: new BlendMode(darkenBlend, sourceOverComp),
+    'normal': new BlendMode(normalBlend, sourceOverComp),
+
+    'darken': new BlendMode(darkenBlend, sourceOverComp),
+    'multiply': new BlendMode(multiplyBlend, sourceOverComp),
+    'color-burn': new BlendMode(colorBurnBlend, sourceOverComp),
+    'linear-burn': new BlendMode(linearBurnBlend, sourceOverComp),
+    'darker-color': new BlendMode(colorDarkerBlend, sourceOverComp),
+
+    'lighten': new BlendMode(lightenBlend, sourceOverComp),
+    'screen': new BlendMode(screenBlend, sourceOverComp),
+    'color-dodge': new BlendMode(colorDodgeBlend, sourceOverComp),
+    'linear-dodge': new BlendMode(linearDodgeBlend, sourceOverComp),
+    'lighter-color': new BlendMode(colorLighterBlend, sourceOverComp),
+
+    'overlay': new BlendMode(overlayBlend, sourceOverComp),
+    'soft-light': new BlendMode(softLightBlend, sourceOverComp),
     'hard-light': new BlendMode(hardLightBlend, sourceOverComp),
-    multiply: new BlendMode(multiplyBlend, sourceOverComp),
-    normal: new BlendMode(normalBlend, sourceOverComp),
-    overlay: new BlendMode(overlayBlend, sourceOverComp),
-    screen: new BlendMode(screenBlend, sourceOverComp),
+    'vivid-light': new BlendMode(vividLightBlend, sourceOverComp),
+    'inear-light': new BlendMode(linearLightBlend, sourceOverComp),
+    'pin-light': new BlendMode(pinLightBlend, sourceOverComp),
+    'hard-mix': new BlendMode(hardMixBlend, xorComp),
+
+    'difference': new BlendMode(differenceBlend, sourceOverComp),
+    'exclusion': new BlendMode(exclusionBlend, sourceOverComp),
+    'subtract': new BlendMode(subtractBlend, sourceOverComp),
+    'divide': new BlendMode(divideBlend, sourceOverComp),
+
+    'hue': new BlendMode(hueBlend, sourceOverComp),
+    'saturation': new BlendMode(saturationBlend, sourceOverComp),
+    'luminosity': new BlendMode(luminosityBlend, sourceOverComp),
+    'color': new BlendMode(colorBlend, sourceOverComp),
+    
+    'clear': new BlendMode(normalBlend, clearComp),
+    'destination-atop': new BlendMode(normalBlend, destinationAtopComp),
+    'destination': new BlendMode(normalBlend, destinationComp),
+    'destination-in': new BlendMode(normalBlend, destinationInComp),
+    'destination-out': new BlendMode(normalBlend, destinationOutComp),
+    'destination-over': new BlendMode(normalBlend, destinationOverComp),
+    'source-atop': new BlendMode(normalBlend, sourceAtopComp),
+    'source-in': new BlendMode(normalBlend, sourceInComp),
+    'source-out': new BlendMode(normalBlend, sourceOutComp),
+    'lighter': new BlendMode(normalBlend, lighterComp),
+    'xor': new BlendMode(normalBlend, xorComp),
+
+    //Add other combinations if needed.
 }
