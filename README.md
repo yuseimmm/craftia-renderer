@@ -1,68 +1,49 @@
-# craftia-renderer
-### The 2D rendering library for WebGL
-The goal of this project is to create a fast, lightweight 2D rendering library for image editing software.
-The library fully supports WebGL for fast and powerful rendering with hardware acceleration.
+# Craftia-Renderer
+## The 2D Rendering Library for WebGL
+The aim of this project is to develop a fast, lightweight 2D rendering library for image editing software. The library fully leverages WebGL for rapid and potent rendering with hardware acceleration.
 
-## features
+## Features
 ### Supported ✅
-- WebGL Renderer 
-- Several blend modes
-- Transformations (rotation, scaling, translation, and other free free transformations) 
-- Render Texture
-### Work in progress 🏗️
+- WebGL Renderer
 - Full support for blend modes
-- Layer mask
-- Vector image
-- Filter
+- Various types of layers (smart layers, raster layers)
+- Layer Grouping
+- Transformations (rotation, scaling, translation, and other transformations)
+- Texture Rendering
+### Work in Progress 🏗️
+- Layer Masks
+- Layer Effects
+- Filters
 
 ## Usage
 ```typescript
-import * as CRAFTIA from '@yuseimmm/craftia-renderer';
-
-//init
-const canvas = document.createElement('canvas') as HTMLCanvasElement;
-const gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
-
-const renderer = new CRAFTIA.WebGLRenderer(gl);
-const renderPipeline = new CRAFTIA.RenderPipeline(renderer);
-renderer.setSize(new CRAFTIA.Vec2(1920, 1080));
+import * as CRAFTIA from "@yuseimmm/craftia-renderer"
 
 const main = async () => {
-    // Create a main group
-    const mainGroup = new CRAFTIA.Container({
-        transform: [
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
-        ],
-        visible: true,
-        scaling: new CRAFTIA.Vec2(1, 1),
-        translation: new CRAFTIA.Vec2(0, 0),
-        rotation: 0 * (Math.PI / 180),
-        blendMode: "normal",
-        opacity: 1.0
+    //init
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;
+    const gl = canvas.getContext('webgl2') as WebGL2RenderingContext;
+
+    document.body.appendChild(canvas);
+
+    const renderer = new CRAFTIA.WebGLRenderer(gl).resize(1920, 1080);
+    const renderPipeline = renderer.createRenderPipeline({
+        width: renderer.width,
+        height: renderer.height
     });
 
-    //Create a layer
-    const layer1 = new CRAFTIA.RasterLayer({
-        //Load the texture
-        texture: await CRAFTIA.createTextureAsync('./sample.png'),
-        transform: [
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
-        ],
+    const layer = new CRAFTIA.SmartLayer({
+        texture: await CRAFTIA.createTextureAsync('./img/sample.png'),
         visible: true,
-        scaling: new CRAFTIA.Vec2(1, 1),
         translation: new CRAFTIA.Vec2(0, 0),
-        rotation: 0 * (Math.PI / 180),
         blendMode: "normal",
+        scaling: new CRAFTIA.Vec2(1, 1),
         opacity: 1.0
     })
 
-    // Add the layer to main group
-    mainGroup.setChildren([layer1]);
-    //rendering
-    mainGroup.render(renderPipeline);
+    layer.render(renderPipeline);
+    renderPipeline.renderScreen();
 }
+
+main();
 ```
