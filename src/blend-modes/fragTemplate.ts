@@ -1,4 +1,4 @@
-import { ShaderTemplate } from '../types/Shaders'
+import { type ShaderTemplate } from '../types/Shaders'
 
 export const fragTemplate: ShaderTemplate = ({
     header,
