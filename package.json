@@ -1,11 +1,24 @@
 {
-  "name": "craftia-renderer",
+  "name": "@yuseimmm/craftia-renderer",
   "version": "0.0.0",
   "description": "WebGL-based rendering engine for the image editing application \"craftia\"",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "build": "tsc",
+    "dev": "vite",
+    "build": "vite build",
+    "watch": "vite build --watch",
     "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.ts\" && eslint --fix --ext .ts src"
@@ -14,16 +27,19 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^5.2.10"
   },
   "dependencies": {
     "@types/gl-matrix": "^3.2.0",
-    "gl-matrix": "^3.4.3"
+    "gl-matrix": "^3.4.3",
+    "tslib": "^2.6.2"
   }
 }
