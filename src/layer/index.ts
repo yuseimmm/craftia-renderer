@@ -1,2 +1,3 @@
-export * from './Layer'
+export * from './ILayer'
 export * from './RasterLayer'
+export * from './SmartLayer'
