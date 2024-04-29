@@ -3,7 +3,8 @@ import { Mesh } from '../mesh/Mesh'
 import { MeshGeometry } from '../mesh/MeshGeometry'
 import { RenderPipeline } from '../pipeline/RenderPipeline'
 
-type BlendOptions = {
+export type BlendOptions = {
+    blendMode: BlendMode
     opacity: number
 }
 
@@ -22,12 +23,12 @@ export class BlendModePipeline {
         })
     }
 
-    public blend(blendMode: BlendMode, options: BlendOptions) {
+    public blend({ blendMode, opacity }: BlendOptions) {
         this._renderPipeline.renderer.frameBuffer.bind(this._renderPipeline.target)
 
         blendMode.shader.uniforms.setValues({
             float: {
-                u_alpha: options.opacity,
+                u_alpha: opacity,
             },
         })
 
