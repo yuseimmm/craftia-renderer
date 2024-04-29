@@ -1,70 +1,104 @@
 import { mat3 } from 'gl-matrix'
-import { Shader, Texture, Vec2 } from '../core'
-import { Sprite, SpriteOptions } from './Sprite'
+import { FrameBuffer, Shader, Texture, WebGLRenderer } from '../core'
 import { MeshGeometry } from '../mesh/MeshGeometry'
 import { Mesh } from '../mesh/Mesh'
-import { RenderPipeline } from '../pipeline/RenderPipeline'
 import { defaultVertex } from './shaders/defaultVertex'
 import { defaultFragment } from './shaders/defaultFragment'
-import { UniformGroup } from '../core/uniforms/UniformGroup'
+import { UniformGroup, Uniforms } from '../core/uniforms/UniformGroup'
+import { ISprite } from './ISprite'
 
 const TEXTURE_UNITNUMBER = 0
 
-const SHADER = Shader.from(
-    defaultVertex(),
-    defaultFragment(),
-    new UniformGroup({
-        int: {
-            u_texture: 0,
-        },
-        'mat3x3<float>': {
-            u_matrix: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-        },
-    })
-)
+export type TextureSpriteShader = Shader<
+    UniformGroup<
+        {
+            int: {
+                [key: string]: number
+                u_texture: number
+            }
+            'mat3x3<float>': {
+                [key: string]: mat3
+                u_matrix: mat3
+            }
+        } & Uniforms
+    >
+>
 
-export interface TextureSpriteOptions extends SpriteOptions {
+export interface TextureSpriteOptions {
+    transform: mat3
     texture: Texture
+    shader?: TextureSpriteShader
 }
 
-export class TextureSprite extends Sprite {
+export class TextureSprite implements ISprite {
+    static readonly defaultMatrix: mat3 = mat3.fromValues(1, 0, 0, 0, 1, 0, 0, 0, 1)
+    static readonly defaultShader: TextureSpriteShader = Shader.from(
+        defaultVertex(),
+        defaultFragment(),
+        new UniformGroup({
+            int: {
+                u_texture: 0,
+            },
+            'mat3x3<float>': {
+                u_matrix: TextureSprite.defaultMatrix,
+            },
+        })
+    )
     public texture: Texture
-    private _mesh
-    private _size: Vec2
+    public transform: mat3
 
-    constructor({ texture, ...options }: TextureSpriteOptions) {
-        super(options)
+    private _mesh
+    private _geometryWidth: number
+    private _geometryHeight: number
+
+    constructor({ texture, shader, transform }: TextureSpriteOptions) {
+        this.transform = transform
         this.texture = texture
 
         this._mesh = new Mesh({
             geometry: new MeshGeometry({
-                positions: this._getPositions(),
+                positions: this._createPositions(),
             }),
-            shader: SHADER,
+            shader: shader ?? TextureSprite.defaultShader,
             textures: {},
         })
 
-        this._size = this.texture.size
+        this._geometryWidth = texture.width
+        this._geometryHeight = texture.height
     }
 
-    public get realWidth() {
-        return this.texture.size.x
+    public get width() {
+        return this.texture.width
     }
 
-    public get realHeight() {
-        return this.texture.size.y
+    public get height() {
+        return this.texture.height
     }
 
-    public render(target: RenderPipeline) {
-        if (!this._size.equal(this.texture.size)) {
+    public set shader(shader: TextureSpriteShader) {
+        this._mesh.shader = shader
+    }
+
+    public get shader() {
+        return this._mesh.shader
+    }
+    public render(renderer: WebGLRenderer, target: FrameBuffer | null) {
+        const width = target?.width ? target.width : renderer.width
+        const height = target?.height ? target.height : renderer.height
+        if (
+            this._geometryWidth !== this.texture.width ||
+            this._geometryHeight !== this.texture.height
+        ) {
             this._onResize()
         }
 
-        this._size = this.texture.size
+        this._geometryWidth = this.texture.width
+        this._geometryHeight = this.texture.width
+
         // prettier-ignore
         const projectionMatrix = mat3.fromValues(
-            2 / target.front.size.x, 0, 0,
-            0, 2 / target.front.size.y, 0,
+            2 / width, 0, 0,
+            0, 2 / height, 0,
             -1, -1, 1
         );
 
@@ -83,18 +117,20 @@ export class TextureSprite extends Sprite {
             [TEXTURE_UNITNUMBER]: this.texture,
         }
 
-        target.use()
-        target.renderer.clear()
-        target.renderer.mesh.excude(this._mesh)
-
-        return target.front.getColorTexture()
+        renderer.frameBuffer.bind(target)
+        renderer.clear()
+        renderer.mesh.excude(this._mesh)
     }
 
-    private _getPositions() {
+    private _onResize() {
+        this._mesh.geometry.setPositions(this._createPositions())
+    }
+
+    private _createPositions() {
         const x1 = 0
-        const x2 = 0 + this.texture.size.x
+        const x2 = 0 + this.texture.width
         const y1 = 0
-        const y2 = 0 + this.texture.size.y
+        const y2 = 0 + this.texture.height
         // prettier-ignore
         return new Float32Array([
             x1, y1,
@@ -104,7 +140,11 @@ export class TextureSprite extends Sprite {
         ]);
     }
 
-    private _onResize() {
-        this._mesh.geometry.setPositions(this._getPositions())
+    public clone() {
+        return new TextureSprite({
+            texture: this.texture,
+            shader: this.shader,
+            transform: mat3.clone(this.transform),
+        })
     }
 }

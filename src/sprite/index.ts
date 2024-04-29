@@ -1,2 +1,2 @@
-export * from './Sprite'
+export * from './ISprite'
 export * from './TextureSprite'
