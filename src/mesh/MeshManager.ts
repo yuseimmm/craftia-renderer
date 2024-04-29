@@ -1,4 +1,4 @@
-import { WebGLRenderer } from '../core'
+import { WebGLRenderer } from '../core/WebGLRenderer'
 import { Mesh } from './Mesh'
 
 export class MeshManager {

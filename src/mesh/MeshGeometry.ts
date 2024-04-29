@@ -1,4 +1,10 @@
-import { Geometry, IndexBuffer, IndexBufferData, VertexBuferData, VertexBuffer } from '../core'
+import {
+    type VertexBuferData,
+    type IndexBufferData,
+    VertexBuffer,
+    IndexBuffer,
+} from '../core/buffer'
+import { Geometry } from '../core/geometry'
 
 export type MeshGeometryOptions = {
     positions?: VertexBuferData

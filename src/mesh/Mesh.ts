@@ -1,4 +1,5 @@
-import { Shader, Texture } from '../core'
+import { Shader } from '../core/shader'
+import { Texture } from '../core/textures'
 import { MeshGeometry } from './MeshGeometry'
 
 export type MeshTextures = {
