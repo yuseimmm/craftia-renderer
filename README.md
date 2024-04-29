@@ -26,11 +26,11 @@ const main = async () => {
 
     document.body.appendChild(canvas);
 
-    const renderer = new CRAFTIA.WebGLRenderer(gl).resize(1920, 1080);
-    const renderPipeline = renderer.createRenderPipeline({
-        width: renderer.width,
-        height: renderer.height
-    });
+    const renderer = new CRAFTIA.WebGLRenderer(gl, {
+        width: 1920,
+        height: 1080
+    })
+    const renderPipeline = renderer.createRenderPipeline();
 
     const layer = new CRAFTIA.SmartLayer({
         texture: await CRAFTIA.createTextureAsync('./img/sample.png'),
