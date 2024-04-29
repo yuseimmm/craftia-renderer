@@ -1,20 +1,16 @@
 import { Vec2 } from '../units'
 
-/** テクスチャ画像の仕様・オプション */
 export type TexOptions = {
-    /** 最大のミップ */
+    /** A GLint specifying the level of detail. */
     level?: number
-    /**テクスチャの形式 */
+    /**A GLenum specifying the color components in the texture. */
     internalformat?: GLenum
-    /**データの形式 */
+    /**A GLenum specifying the format of the texel data. */
     format?: GLenum
-    /**データの種類 */
+    /**A GLenum specifying the data type of the texel data. */
     type?: GLenum
-    /**使用するテクスチャユニット */
-    unitNumber?: number
-    /**境界線の幅。0 である必要がある。 */
+    /**A GLint specifying the width of the border. Must be 0. */
     border?: number
-
     repeat?: boolean
     flipY?: boolean
     magFilter?: GLenum
@@ -31,7 +27,6 @@ export type TextureMinFilter = WebGL2RenderingContext[
 
 export type TextureMagFilter = WebGL2RenderingContext['NEAREST' | 'LINEAR']
 
-/**テクスチャに使用できる画像ののピクセルソース*/
 export type TexImageSource =
     | OffscreenCanvas
     | HTMLImageElement
@@ -40,44 +35,29 @@ export type TexImageSource =
     | ImageBitmap
     | ImageData
 
-/** テクスチャに使用できる型付き配列のピクセルソース*/
 export type TexTypedArray = Uint8Array | Uint16Array | Uint32Array | Float32Array | null
 
-/**テクスチャに利用できるピクセルソース */
 export type TexPixcels = TexImageSource | TexTypedArray
 
-/**
- * WegGLの型付き配列テクスチャを管理するクラス。
- */
 export class GLTexture {
-    private version: number
-    /**現在のサイズ */
-    private _resolution: Vec2 = new Vec2(0, 0)
-    /**WebGL2のコンテキスト */
+    private _version: number
+    private _size: Vec2 = new Vec2(0, 0)
     public readonly gl: WebGL2RenderingContext
-    /**内包する`WebGLTexture` */
     public readonly webGLTexture: WebGLTexture
-    /** 最大のミップ */
+    /** A GLint specifying the level of detail. */
     public readonly level: number
-    /**テクスチャの形式 */
     public readonly internalformat: GLenum
-    /**データの形式 */
+    /**A GLenum specifying the format of the texel data. */
     public readonly format: GLenum
-    /**データの種類 */
+    /**A GLenum specifying the data type of the texel data. */
     public readonly type: GLenum
-    /**境界線の幅。0 である必要がある。 */
+    /**A GLint specifying the width of the border. Must be 0. */
     public readonly border: number = 0
-    /**画像繰り返し */
     public readonly repeat: boolean
-    /**y座標を反転 */
     public readonly flipY: boolean
 
     public readonly magFilter: GLenum
     public readonly minFilter: GLenum
-
-    public get resolution() {
-        return this._resolution
-    }
 
     constructor(
         gl: WebGL2RenderingContext,
@@ -104,11 +84,19 @@ export class GLTexture {
         this.flipY = flipY
         this.magFilter = magFilter
         this.minFilter = minFilter
-        this.version = 0
+        this._version = 0
+    }
+
+    public get width() {
+        return this._size.x
+    }
+
+    public get height() {
+        return this._size.y
     }
 
     public necessaryUpdate(version: number) {
-        return version !== this.version
+        return version !== this._version
     }
 
     public bind(unitNmber: number) {
@@ -116,18 +104,25 @@ export class GLTexture {
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.webGLTexture)
         return this
     }
+
     /**
      * This transfers a pixel source to the texture.
+     * @param unitNmber the texture unit to make active when binding.
+     * @param version the version of the texture
      * @param pixcels the pixel source for the texture
-     * @param size the width and height of the texture
-     * @param unitNmber Texture unit used for binding.
-     * @param param2.enableNPOT Whether to use something other than a squared size image.
-     * @param param2.repeat Whether to repeat the image.
-     * @param param2.yCoordinateInversion Whether to flip the image vertically.
+     * @param width the width of the texture
+     * @param height the height of the texture
+     * @returns
      */
-    public setPixcels(unitNmber: number, version: number, pixcels: TexPixcels, size: Vec2) {
-        this.version = version
-        this._resolution = size
+    public setPixcels(
+        unitNmber: number,
+        version: number,
+        pixcels: TexPixcels,
+        width: number,
+        height: number
+    ) {
+        this._version = version
+        this._size = new Vec2(width, height)
         this.bind(unitNmber)
 
         if (ArrayBuffer.isView(pixcels) || pixcels === null) {
@@ -135,8 +130,8 @@ export class GLTexture {
                 this.gl.TEXTURE_2D,
                 this.level,
                 this.internalformat,
-                this._resolution.x,
-                this._resolution.y,
+                this._size.x,
+                this._size.y,
                 this.border,
                 this.format,
                 this.type,
@@ -147,8 +142,8 @@ export class GLTexture {
                 this.gl.TEXTURE_2D,
                 this.level,
                 this.internalformat,
-                this._resolution.x,
-                this._resolution.y,
+                this._size.x,
+                this._size.y,
                 this.border,
                 this.format,
                 this.type,
