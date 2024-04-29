@@ -3,19 +3,19 @@ import { Vec2 } from '../units'
 import { GLFrameBuffer } from './GLFrameBuffer'
 
 export class FrameBuffer {
-    private glFrameBuffer: GLFrameBuffer | null
-    private gl: WebGL2RenderingContext | null
-    private colorTexture: Texture
+    private _glFrameBuffer: GLFrameBuffer | null
+    private _gl: WebGL2RenderingContext | null
+    private _colorTexture: Texture
 
-    public size: Vec2
+    private _size: Vec2
     public version: number
 
     constructor(width?: number, height?: number) {
-        this.size = new Vec2(0, 0)
-        this.colorTexture = new Texture()
+        this._size = new Vec2(0, 0)
+        this._colorTexture = new Texture()
 
-        this.glFrameBuffer = null
-        this.gl = null
+        this._glFrameBuffer = null
+        this._gl = null
 
         this.version = 0
 
@@ -23,24 +23,24 @@ export class FrameBuffer {
     }
 
     public get width() {
-        return this.size.x
+        return this._size.x
     }
 
     public get height() {
-        return this.size.y
+        return this._size.y
     }
 
     public getColorTexture() {
-        return this.colorTexture
+        return this._colorTexture
     }
 
     public detachColorTexture() {
-        const detachedTexture = this.colorTexture
+        const detachedTexture = this._colorTexture
 
-        this.colorTexture = new Texture()
+        this._colorTexture = new Texture()
 
-        if (this.size.x > 0 && this.size.y > 0) {
-            this.colorTexture.setPixcels(null, this.size)
+        if (this._size.x > 0 && this._size.y > 0) {
+            this._colorTexture.setPixcels(null, this._size.x, this._size.y)
         }
 
         this.version++
@@ -51,24 +51,24 @@ export class FrameBuffer {
     public resize(size: Vec2) {
         const _size = size.round()
 
-        if (_size.equal(this.size)) {
+        if (_size.equal(this._size)) {
             return this
         }
-        this.size = _size
+        this._size = _size
 
-        this.colorTexture.setPixcels(null, this.size)
+        this._colorTexture.setPixcels(null, this._size.x, this._size.y)
         this.version++
     }
 
     public generateGLframeBuffer(gl: WebGL2RenderingContext) {
-        if (gl === this.gl && this.glFrameBuffer) {
-            return this.glFrameBuffer
+        if (gl === this._gl && this._glFrameBuffer) {
+            return this._glFrameBuffer
         }
-        this.gl = gl
-        return (this.glFrameBuffer = new GLFrameBuffer(gl))
+        this._gl = gl
+        return (this._glFrameBuffer = new GLFrameBuffer(gl))
     }
     public destroy() {
-        this.glFrameBuffer?.destroy()
-        this.glFrameBuffer = null
+        this._glFrameBuffer?.destroy()
+        this._glFrameBuffer = null
     }
 }

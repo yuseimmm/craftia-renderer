@@ -5,9 +5,9 @@ import { GLShader } from './GLShader'
  */
 export class GLProgram {
     readonly gl: WebGL2RenderingContext
-    private webGLprogram: WebGLProgram
-    private vertexShader: GLShader<typeof WebGL2RenderingContext.VERTEX_SHADER>
-    private fragmentShader: GLShader<typeof WebGL2RenderingContext.FRAGMENT_SHADER>
+    private _webGLprogram: WebGLProgram
+    private _vertexShader: GLShader<typeof WebGL2RenderingContext.VERTEX_SHADER>
+    private _fragmentShader: GLShader<typeof WebGL2RenderingContext.FRAGMENT_SHADER>
     /**
      * @param gl WebGL2 context used to create WebGLProgram
      * @param vertexShader vetex shader
@@ -21,17 +21,17 @@ export class GLProgram {
         this.gl = gl
         const program = this.gl.createProgram() as WebGLProgram
 
-        this.vertexShader = vertexShader
-        this.fragmentShader = fragmentShader
+        this._vertexShader = vertexShader
+        this._fragmentShader = fragmentShader
 
-        this.gl.attachShader(program, this.vertexShader.webGLShader)
-        this.gl.attachShader(program, this.fragmentShader.webGLShader)
+        this.gl.attachShader(program, this._vertexShader.webGLShader)
+        this.gl.attachShader(program, this._fragmentShader.webGLShader)
         this.gl.linkProgram(program)
 
         const linkStatus = this.gl.getProgramParameter(program, this.gl.LINK_STATUS)
 
         if (linkStatus) {
-            this.webGLprogram = program
+            this._webGLprogram = program
         } else {
             const info = this.gl.getProgramInfoLog(program) ?? 'Failed to link program.'
             this.gl.deleteProgram(program)
@@ -43,7 +43,7 @@ export class GLProgram {
      * Activate the program.
      */
     public bind() {
-        this.gl.useProgram(this.webGLprogram)
+        this.gl.useProgram(this._webGLprogram)
     }
 
     /**
@@ -52,7 +52,7 @@ export class GLProgram {
      * @returns the location of an attribute
      */
     public getAttribLocation(name: string) {
-        return this.gl.getAttribLocation(this.webGLprogram, name)
+        return this.gl.getAttribLocation(this._webGLprogram, name)
     }
 
     /**
@@ -61,12 +61,12 @@ export class GLProgram {
      * @returns the location of an uniform
      */
     public getUniformLocation(name: string) {
-        return this.gl.getUniformLocation(this.webGLprogram, name)
+        return this.gl.getUniformLocation(this._webGLprogram, name)
     }
     /**
      * Destroy program.
      */
     public destroy() {
-        this.gl.deleteProgram(this.webGLprogram)
+        this.gl.deleteProgram(this._webGLprogram)
     }
 }

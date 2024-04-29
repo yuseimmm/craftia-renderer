@@ -1,22 +1,22 @@
 export class AttributeLocation {
-    private shaerID: number | null
-    private location: number
+    private _shaerID: number | null
+    private _location: number
 
     constructor(shader?: number, location?: number) {
-        this.shaerID = shader ?? null
-        this.location = location ?? -1
+        this._shaerID = shader ?? null
+        this._location = location ?? -1
     }
 
     public get() {
-        return this.location
+        return this._location
     }
 
     public necessaryUpdate(shaderID: number | null) {
-        return this.shaerID !== shaderID
+        return this._shaerID !== shaderID
     }
 
     public update(shaderID: number | null, location: number | null) {
-        this.shaerID = shaderID
-        this.location = location ?? -1
+        this._shaerID = shaderID
+        this._location = location ?? -1
     }
 }

@@ -2,10 +2,10 @@ import { WebGLRenderer } from '../WebGLRenderer'
 import { Texture } from './Texture'
 
 export class TextureManager {
-    private readonly renderer: WebGLRenderer
+    private _renderer: WebGLRenderer
 
     constructor(renderer: WebGLRenderer) {
-        this.renderer = renderer
+        this._renderer = renderer
     }
     public bind(texture: Texture | null, unitNumber: number = 0) {
         if (!texture) {
@@ -13,18 +13,24 @@ export class TextureManager {
             return
         }
         this.update(texture, unitNumber)
-        const glTexture = texture.generateGLtexture(this.renderer.gl)
+        const glTexture = texture.generateGLtexture(this._renderer.gl)
         glTexture.bind(unitNumber)
     }
     public unbind(unitNumber: number) {
-        this.renderer.gl.activeTexture(this.renderer.gl.TEXTURE0 + unitNumber)
-        this.renderer.gl.bindTexture(this.renderer.gl.TEXTURE_2D, null)
+        this._renderer.gl.activeTexture(this._renderer.gl.TEXTURE0 + unitNumber)
+        this._renderer.gl.bindTexture(this._renderer.gl.TEXTURE_2D, null)
     }
     public update(texture: Texture, unitNumber: number) {
-        const glTexture = texture.generateGLtexture(this.renderer.gl)
+        const glTexture = texture.generateGLtexture(this._renderer.gl)
 
         if (glTexture.necessaryUpdate(texture.version)) {
-            glTexture.setPixcels(unitNumber, texture.version, texture.pixcels, texture.size)
+            glTexture.setPixcels(
+                unitNumber,
+                texture.version,
+                texture.pixcels,
+                texture.width,
+                texture.height
+            )
         }
     }
 }

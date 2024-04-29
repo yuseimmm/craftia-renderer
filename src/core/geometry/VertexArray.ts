@@ -3,28 +3,28 @@
  */
 export class VertexArray {
     protected gl2: WebGL2RenderingContext
-    private webGLVAO: WebGLVertexArrayObject
-    private version: number
+    private _webGLVAO: WebGLVertexArrayObject
+    private _version: number
 
     /**
      * @param gl WebGL2 context used to create WebGL2RenderingContext
      */
     constructor(gl: WebGL2RenderingContext) {
         this.gl2 = gl
-        this.webGLVAO = this.gl2.createVertexArray() as WebGLVertexArrayObject
-        this.version = 0
+        this._webGLVAO = this.gl2.createVertexArray() as WebGLVertexArrayObject
+        this._version = 0
     }
 
     public necessaryUpdate(version: number) {
-        return version !== this.version
+        return version !== this._version
     }
 
     public setVersion(version: number) {
-        this.version = version
+        this._version = version
     }
 
     public bind() {
-        this.gl2.bindVertexArray(this.webGLVAO)
+        this.gl2.bindVertexArray(this._webGLVAO)
     }
 
     /**
@@ -35,6 +35,6 @@ export class VertexArray {
     }
 
     public destroy() {
-        this.gl2.deleteVertexArray(this.webGLVAO)
+        this.gl2.deleteVertexArray(this._webGLVAO)
     }
 }

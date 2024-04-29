@@ -36,16 +36,16 @@ export class Geometry {
     public indexBuffer: IndexBuffer | null
     public version: number
 
-    private vertexArray: VertexArray | null
-    private gl: WebGL2RenderingContext | null
+    private _vertexArray: VertexArray | null
+    private _gl: WebGL2RenderingContext | null
 
     constructor(options: GeometryOptions = {}) {
         this.buffers = []
         this.attributes = []
 
         this.indexBuffer = null
-        this.vertexArray = null
-        this.gl = null
+        this._vertexArray = null
+        this._gl = null
 
         this.version = 0
 
@@ -195,8 +195,8 @@ export class Geometry {
         this.buffers = []
         this.attributes = []
 
-        this.vertexArray?.destroy()
-        this.vertexArray = null
+        this._vertexArray?.destroy()
+        this._vertexArray = null
 
         return this
     }
@@ -209,10 +209,10 @@ export class Geometry {
      * @returns vertex array
      */
     public generateVao(gl: WebGL2RenderingContext) {
-        if (gl === this.gl && this.vertexArray) {
-            return this.vertexArray
+        if (gl === this._gl && this._vertexArray) {
+            return this._vertexArray
         }
-        this.gl = gl
-        return (this.vertexArray = new VertexArray(gl))
+        this._gl = gl
+        return (this._vertexArray = new VertexArray(gl))
     }
 }

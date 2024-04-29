@@ -2,40 +2,40 @@
  * Wrapper for WebGLFramebuffer
  */
 export class GLFrameBuffer {
-    private gl: WebGL2RenderingContext
-    private webGLFramebuffer: WebGLFramebuffer | null
-    private version: number
+    private _gl: WebGL2RenderingContext
+    private _webGLFramebuffer: WebGLFramebuffer | null
+    private _version: number
 
     /**
      * Create a GLFrameBuffer
      * @param gl WebGL2 context used to create WebGLFramebuffer
      */
     constructor(gl: WebGL2RenderingContext) {
-        this.gl = gl
-        this.webGLFramebuffer = this.gl.createFramebuffer()
-        this.version = 0
+        this._gl = gl
+        this._webGLFramebuffer = this._gl.createFramebuffer()
+        this._version = 0
     }
 
     public necessaryUpdate(version: number) {
-        return version !== this.version
+        return version !== this._version
     }
 
     public setVersion(version: number) {
-        this.version = version
+        this._version = version
     }
 
     /**
      * Bind WebGLFramebuffer.
      */
     public bind() {
-        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.webGLFramebuffer)
+        this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, this._webGLFramebuffer)
     }
 
     /**
      * destroy WebGLFramebuffer.
      */
     public destroy() {
-        this.gl.deleteFramebuffer(this.webGLFramebuffer)
+        this._gl.deleteFramebuffer(this._webGLFramebuffer)
     }
 
     /**

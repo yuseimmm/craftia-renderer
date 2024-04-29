@@ -2,14 +2,14 @@ import { WebGLRenderer } from '../WebGLRenderer'
 import { Shader } from './Shader'
 
 export class ShaderManager {
-    private renderer: WebGLRenderer
+    private _renderer: WebGLRenderer
     private _activeShader: Shader | null
 
     public get activeShader() {
         return this._activeShader
     }
     constructor(renderer: WebGLRenderer) {
-        this.renderer = renderer
+        this._renderer = renderer
         this._activeShader = null
     }
     public bind(shader: Shader) {
@@ -20,11 +20,11 @@ export class ShaderManager {
         this._activeShader = shader
 
         //bind program
-        const glProgram = shader.program.generateGLProgram(this.renderer.gl)
+        const glProgram = shader.program.generateGLProgram(this._renderer.gl)
         glProgram.bind()
 
         //bind uniforms
-        this.renderer.uniforms.bind(shader.uniforms)
+        this._renderer.uniforms.bind(shader.uniforms)
     }
     public getAttribLocation(name: string, shader?: Shader) {
         const _shader = shader ?? this._activeShader
@@ -32,7 +32,7 @@ export class ShaderManager {
             return -1
         }
 
-        const glProgram = _shader.program.generateGLProgram(this.renderer.gl)
+        const glProgram = _shader.program.generateGLProgram(this._renderer.gl)
         return glProgram.getAttribLocation(name)
     }
     public getUniformLocation(name: string, shader?: Shader) {
@@ -41,7 +41,7 @@ export class ShaderManager {
             return null
         }
 
-        const glProgram = _shader.program.generateGLProgram(this.renderer.gl)
+        const glProgram = _shader.program.generateGLProgram(this._renderer.gl)
         return glProgram.getUniformLocation(name)
     }
 }

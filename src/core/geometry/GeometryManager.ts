@@ -1,16 +1,15 @@
 import { WebGLRenderer } from '../WebGLRenderer'
 import { Geometry } from './Geometry'
 export class GeometryManager {
+    private _renderer: WebGLRenderer
     public activeGeometry: Geometry | null
-    private renderer: WebGLRenderer
-
     constructor(renderer: WebGLRenderer) {
-        this.renderer = renderer
+        this._renderer = renderer
         this.activeGeometry = null
     }
 
     public update(geometry: Geometry) {
-        const vao = geometry.generateVao(this.renderer.gl)
+        const vao = geometry.generateVao(this._renderer.gl)
 
         vao.bind()
 
@@ -20,20 +19,20 @@ export class GeometryManager {
                 const buffer = geometry.buffers[attr.buffer]
 
                 if (buffer) {
-                    this.renderer.buffer.bind(buffer)
-                    this.renderer.attribute.bind(attr)
+                    this._renderer.buffer.bind(buffer)
+                    this._renderer.attribute.bind(attr)
                 }
             }
 
             if (geometry.indexBuffer) {
-                this.renderer.buffer.bind(geometry.indexBuffer)
+                this._renderer.buffer.bind(geometry.indexBuffer)
             }
         } else {
             geometry.buffers.forEach((b) => {
-                this.renderer.buffer.update(b)
+                this._renderer.buffer.update(b)
             })
             geometry.attributes.forEach((a) => {
-                this.renderer.attribute.update(a)
+                this._renderer.attribute.update(a)
             })
         }
 
@@ -44,11 +43,11 @@ export class GeometryManager {
     public bind(geometry: Geometry) {
         this.activeGeometry = geometry
         this.update(geometry)
-        geometry.generateVao(this.renderer.gl).bind()
+        geometry.generateVao(this._renderer.gl).bind()
     }
 
     public unbind() {
-        this.renderer.gl.bindVertexArray(null)
+        this._renderer.gl.bindVertexArray(null)
     }
 
     /**
@@ -60,7 +59,7 @@ export class GeometryManager {
      */
     public drawIndex(size?: number, start?: number) {
         const geometry = this.activeGeometry
-        const gl2 = this.renderer.gl
+        const gl2 = this._renderer.gl
 
         if (!geometry) {
             console.warn('No geometry is bound. Please bind the geometry first.')

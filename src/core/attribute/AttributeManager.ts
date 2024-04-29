@@ -2,18 +2,18 @@ import { WebGLRenderer } from '../WebGLRenderer'
 import { Attribute } from './Attribute'
 
 export class AttributeManager {
-    private renderer: WebGLRenderer
+    private _renderer: WebGLRenderer
 
     constructor(renderer: WebGLRenderer) {
-        this.renderer = renderer
+        this._renderer = renderer
     }
 
     public bind(attr: Attribute) {
         this.update(attr)
-        attr.bind(this.renderer.gl)
+        attr.bind(this._renderer.gl)
     }
     public update(attr: Attribute) {
-        const shaderManager = this.renderer.shader
+        const shaderManager = this._renderer.shader
 
         if (attr.location.necessaryUpdate(shaderManager.activeShader?.id ?? null)) {
             attr.location.update(

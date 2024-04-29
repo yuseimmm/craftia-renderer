@@ -5,45 +5,52 @@ export class Texture {
     readonly options: TexOptions
 
     public pixcels: TexPixcels
-    public size: Vec2
-    public version: number
 
-    private glTexture: GLTexture | null
-    private gl: WebGL2RenderingContext | null
+    public version: number
+    private _size: Vec2
+    private _glTexture: GLTexture | null
+    private _gl: WebGL2RenderingContext | null
 
     constructor(options: TexOptions = {}) {
         this.options = options
 
         this.pixcels = null
-        this.size = new Vec2(0, 0)
+        this._size = new Vec2(0, 0)
 
-        this.glTexture = null
-        this.gl = null
+        this._glTexture = null
+        this._gl = null
 
         this.version = 0
     }
 
-    public setPixcels(pixcels: TexPixcels, size: Vec2) {
-        if (pixcels === this.pixcels && size.equal(this.size)) {
+    public get width() {
+        return this._size.x
+    }
+    public get height() {
+        return this._size.y
+    }
+    public setPixcels(pixcels: TexPixcels, width: number, height: number) {
+        const size = new Vec2(width, height)
+        if (pixcels === this.pixcels && size.equal(this._size)) {
             return this
         }
 
         this.pixcels = pixcels
-        this.size = size
+        this._size = size
         this.version++
         return this
     }
     public generateGLtexture(gl: WebGL2RenderingContext) {
-        if (gl === this.gl && this.glTexture) {
-            return this.glTexture
+        if (gl === this._gl && this._glTexture) {
+            return this._glTexture
         }
-        this.gl = gl
+        this._gl = gl
 
-        return (this.glTexture = new GLTexture(gl, this.options))
+        return (this._glTexture = new GLTexture(gl, this.options))
     }
     public destroy() {
-        this.glTexture?.destroy()
-        this.glTexture = null
+        this._glTexture?.destroy()
+        this._glTexture = null
         this.pixcels = null
     }
 }
