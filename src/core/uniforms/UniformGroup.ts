@@ -1,7 +1,7 @@
-import { valueof } from '../types'
-import { Uniform, UniformType } from './Uniform'
+import { type valueof } from '../../types'
+import { Uniform, type UniformType } from './Uniform'
 
-type Uniforms = {
+export type Uniforms = {
     [key in keyof UniformType]?: {
         [name: string]: UniformType[key]
     }
