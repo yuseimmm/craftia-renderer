@@ -41,6 +41,7 @@ import { colorDarkerBlend } from './blendings/colorDarkerBlend'
 import { colorLighterBlend } from './blendings/colorLighterBlend'
 import { subtractBlend } from './blendings/subtractBlend'
 import { divideBlend } from './blendings/divideBlend'
+import { mat3 } from 'gl-matrix'
 
 export type BlendModeProps = {
     key: string
@@ -51,6 +52,8 @@ export type BlendModeProps = {
 let uid = 0
 
 export class BlendMode {
+    static readonly defaultMatrix: mat3 = [1, 0, 0, 0, -1, 0, 0, 0, 1]
+
     readonly shader
     readonly id: number
 
@@ -96,7 +99,7 @@ export class BlendMode {
                     u_frontTexture: 1,
                 },
                 'mat3x3<float>': {
-                    u_matrix: [1, 0, 0, 0, -1, 0, 0, 0, 1],
+                    u_matrix: BlendMode.defaultMatrix,
                 },
             })
         )
@@ -138,7 +141,7 @@ export const BLEND_MODES = {
     'saturation': new BlendMode(saturationBlend, sourceOverComp),
     'luminosity': new BlendMode(luminosityBlend, sourceOverComp),
     'color': new BlendMode(colorBlend, sourceOverComp),
-    
+
     'clear': new BlendMode(normalBlend, clearComp),
     'destination-atop': new BlendMode(normalBlend, destinationAtopComp),
     'destination': new BlendMode(normalBlend, destinationComp),
