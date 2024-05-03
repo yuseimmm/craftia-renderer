@@ -1,20 +1,26 @@
 import { BLEND_MODES, BlendMode } from './BlendMode'
 import { Mesh } from '../mesh/Mesh'
 import { MeshGeometry } from '../mesh/MeshGeometry'
-import { RenderPipeline } from '../pipeline/RenderPipeline'
+import { RenderStream } from '../stream/RenderStream'
+import { FrameBuffer, Texture } from '../core'
+import { mat3 } from 'gl-matrix'
 
 export type BlendOptions = {
     blendMode: BlendMode
     opacity: number
+    front?: Texture
+    base?: Texture
+    dest?: FrameBuffer
+    transform?: mat3
 }
 
-export class BlendModePipeline {
-    private _renderPipeline: RenderPipeline
+export class BlendModeStream {
+    private _renderPipeline: RenderStream
 
     //use for blending!
     private _mesh: Mesh<BlendMode['shader']>
 
-    constructor(pipeline: RenderPipeline) {
+    constructor(pipeline: RenderStream) {
         this._renderPipeline = pipeline
         this._mesh = new Mesh({
             textures: {},
@@ -23,18 +29,21 @@ export class BlendModePipeline {
         })
     }
 
-    public blend({ blendMode, opacity }: BlendOptions) {
-        this._renderPipeline.renderer.frameBuffer.bind(this._renderPipeline.target)
+    public blend({ blendMode, opacity, base, front, dest, transform }: BlendOptions) {
+        this._renderPipeline.renderer.frameBuffer.bind(dest || this._renderPipeline.dest)
 
         blendMode.shader.uniforms.setValues({
             float: {
                 u_alpha: opacity,
             },
+            'mat3x3<float>': {
+                u_matrix: transform ?? BlendMode.defaultMatrix,
+            },
         })
 
         this._mesh.textures = {
-            [0]: this._renderPipeline.base.getColorTexture(),
-            [1]: this._renderPipeline.front.getColorTexture(),
+            [0]: base || this._renderPipeline.base.getColorTexture(),
+            [1]: front || this._renderPipeline.front.getColorTexture(),
         }
 
         this._mesh.shader = blendMode.shader
