@@ -25,8 +25,8 @@ export type TextureSpriteShader = Shader<
 >
 
 export interface TextureSpriteOptions {
-    transform: mat3
     texture: Texture
+    transform?: mat3
     shader?: TextureSpriteShader
 }
 
@@ -44,22 +44,24 @@ export class TextureSprite implements ISprite {
             },
         })
     )
-    public texture: Texture
-    public transform: mat3
+    public readonly texture: Texture
+    private _transform: mat3
+    private _shader: TextureSpriteShader
 
     private _mesh
     private _geometryWidth: number
     private _geometryHeight: number
 
-    constructor({ texture, shader, transform }: TextureSpriteOptions) {
-        this.transform = transform
+    constructor({ texture, transform, shader }: TextureSpriteOptions) {
         this.texture = texture
+        this._transform = transform ?? TextureSprite.defaultMatrix
+        this._shader = shader ?? TextureSprite.defaultShader
 
         this._mesh = new Mesh({
             geometry: new MeshGeometry({
                 positions: this._createPositions(),
             }),
-            shader: shader ?? TextureSprite.defaultShader,
+            shader: TextureSprite.defaultShader,
             textures: {},
         })
 
@@ -75,13 +77,18 @@ export class TextureSprite implements ISprite {
         return this.texture.height
     }
 
-    public set shader(shader: TextureSpriteShader) {
-        this._mesh.shader = shader
+    public setShader(shader: Shader) {
+        this._shader = shader
     }
 
-    public get shader() {
-        return this._mesh.shader
+    public setTransform(transform: mat3) {
+        this._transform = transform
     }
+
+    public getTransform() {
+        return this._transform
+    }
+
     public render(renderer: WebGLRenderer, target: FrameBuffer | null) {
         const width = target?.width ? target.width : renderer.width
         const height = target?.height ? target.height : renderer.height
@@ -102,8 +109,9 @@ export class TextureSprite implements ISprite {
             -1, -1, 1
         );
 
-        const matrix = mat3.multiply(projectionMatrix, projectionMatrix, this.transform)
+        const matrix = mat3.multiply(projectionMatrix, projectionMatrix, this._transform)
 
+        this._mesh.shader = this._shader
         this._mesh.shader.uniforms.setValues({
             int: {
                 u_texture: 0,
@@ -143,8 +151,6 @@ export class TextureSprite implements ISprite {
     public clone() {
         return new TextureSprite({
             texture: this.texture,
-            shader: this.shader,
-            transform: mat3.clone(this.transform),
         })
     }
 }
