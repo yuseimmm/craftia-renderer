@@ -2,8 +2,6 @@ import { mat3 } from 'gl-matrix'
 import { BLEND_MODES } from '../blend-modes'
 import { Texture, Vec2 } from '../core'
 import { RenderStream } from '../stream'
-import { EffectStream } from '../effect/EffectStream'
-import { EffectStroke } from '../effect'
 
 export type ContainerParentProps = {
     opacity?: number
@@ -24,13 +22,6 @@ export type ContainerRenderOptions = {
     parentOpacity?: number
 }
 
-// prettier-ignore
-export type Effects = {
-    'stroke'?: EffectStroke
-}
-
-const EFFECTS = ['stroke'] as const
-
 export abstract class Container {
     private _blendMode: keyof typeof BLEND_MODES
     private _scaling: Vec2
@@ -40,7 +31,6 @@ export abstract class Container {
     private _visible: boolean
     private _opacity: number
     private _fill: number
-    private _effects: Effects
     protected projectionMatrix: mat3
 
     protected update: boolean
@@ -64,8 +54,6 @@ export abstract class Container {
         this._visible = visible ?? true
         this._opacity = opacity ?? 1.0
         this._fill = fill ?? 1.0
-
-        this._effects = {}
 
         this.projectionMatrix = mat3.create()
         this.update = false
@@ -158,13 +146,6 @@ export abstract class Container {
         this.updateEffects = true
     }
 
-    public setEffect<KEY extends keyof Effects>(key: KEY, effect: Effects[KEY]) {
-        this._effects[key] = effect
-
-        this.updateEffects = true
-        this.update = true
-    }
-
     public updateProjectionMatrix() {
         mat3.identity(this.projectionMatrix)
 
@@ -188,32 +169,11 @@ export abstract class Container {
 
     public render(
         masterStream: RenderStream,
-        effectStream: EffectStream,
         options: ContainerRenderOptions = {}
     ) {
         masterStream.spin()
 
-        const front = this.renderFront(masterStream, effectStream)
-
-        effectStream.masterBase = masterStream.base.getColorTexture()
-        effectStream.masterFront = front
-
-        if (this.updateEffects) {
-            for (const effect of Object.values(this._effects)) {
-                effect.update(effectStream)
-            }
-        }
-
-        let useEffects: boolean = false
-
-        for (let i = 0; i < EFFECTS.length; i++) {
-            const effect = this._effects[EFFECTS[i]]
-
-            if (effect) {
-                effect.render(effectStream)
-                useEffects = true
-            }
-        }
+        const front = this.renderFront(masterStream)
 
         masterStream.blendMode.blend({
             front: front,
@@ -221,16 +181,8 @@ export abstract class Container {
             opacity: this.opacity * this.fill * (options.parentOpacity ?? 1.0),
         })
 
-        if (useEffects) {
-            masterStream.spin()
-            masterStream.blendMode.blend({
-                front: effectStream.dest.getColorTexture(),
-                blendMode: BLEND_MODES['normal'],
-                opacity: 1.0,
-            })
-        }
     }
 
     // override!!
-    abstract renderFront(masterPipeline: RenderStream, effectPipeline: EffectStream): Texture
+    abstract renderFront(masterPipeline: RenderStream): Texture
 }

@@ -2,7 +2,6 @@ import { Container } from '../contanier'
 import { Vec2 } from '../core'
 import { RenderStream } from '../stream'
 import { BLEND_MODES } from '../blend-modes'
-import { EffectStream } from '../effect/EffectStream'
 
 export type GroupOptions = {
     blendMode?: keyof typeof BLEND_MODES
@@ -22,7 +21,7 @@ export class Group extends Container {
         this._dest = null
     }
 
-    public renderFront(masterStream: RenderStream, effectStream: EffectStream) {
+    public renderFront(masterStream: RenderStream) {
         this._dest = this._dest ? this._dest : masterStream.renderer.createRenderStream()
 
         if (this.requiresUpdate()) {
@@ -33,7 +32,7 @@ export class Group extends Container {
             })
 
             for (let i = 0; i < this._children.length; i++) {
-                this._children[i].render(this._dest, effectStream)
+                this._children[i].render(this._dest)
             }
         }
 
