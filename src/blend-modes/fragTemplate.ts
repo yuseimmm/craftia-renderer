@@ -22,7 +22,8 @@ ${func ?? ''}
 void main() {
     ${start ?? ''}
     vec4 base = texture(u_baseTexture, v_textureCoord);
-    vec4 front = texture(u_frontTexture, v_textureCoord) * vec4(1.0f, 1.0f, 1.0f, u_alpha);
+    vec4 texture = texture(u_frontTexture, v_textureCoord);
+    vec4 front = vec4(texture.rgb, texture.a * u_alpha);
     ${main ?? ''}
 }
 `
