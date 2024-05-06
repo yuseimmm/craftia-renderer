@@ -1,2 +1,2 @@
 export * from './BlendMode'
-export * from './BlendModePipeline'
+export * from './BlendModeStream'
