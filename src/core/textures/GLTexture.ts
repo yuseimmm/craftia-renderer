@@ -68,7 +68,7 @@ export class GLTexture {
             type = gl.UNSIGNED_BYTE,
             border = 0,
             repeat = false,
-            flipY = false,
+            flipY = true,
             magFilter = WebGL2RenderingContext.NEAREST,
             minFilter = WebGL2RenderingContext.NEAREST,
         }: TexOptions = {}
@@ -95,7 +95,7 @@ export class GLTexture {
         return this._size.y
     }
 
-    public necessaryUpdate(version: number) {
+    public requiresUpdate(version: number) {
         return version !== this._version
     }
 
