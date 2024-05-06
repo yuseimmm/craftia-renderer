@@ -1,108 +1,71 @@
-import { mat3 } from 'gl-matrix'
+import { Container } from '../contanier'
+import { Vec2 } from '../core'
+import { RenderStream } from '../stream'
 import { BLEND_MODES } from '../blend-modes'
-import { Container, ContainerOptions } from '../contanier'
-import { Vec2, WebGLRenderer } from '../core'
-import { Effect } from '../effect/Effect'
-import { ILayer } from '../layer'
-import { RenderPipeline } from '../pipeline'
-import { TextureSprite } from '../sprite'
+import { EffectStream } from '../effect/EffectStream'
 
-export type GroupOptions = Partial<ContainerOptions> & {
+export type GroupOptions = {
     blendMode?: keyof typeof BLEND_MODES
+    translation?: Vec2
+    visible?: boolean
+    opacity?: number
+    fill?: number
 }
 
 export class Group extends Container {
-    public blendMode: keyof typeof BLEND_MODES
-
-    private _surface: Effect | null
-    private _surfaceDest: RenderPipeline | null
-    private _children: (Group | ILayer)[]
-    private _update: boolean
+    private _children: Container[]
+    private _dest: RenderStream | null
 
     constructor(options: GroupOptions) {
         super(options)
-
-        this._surface = null
-        this._surfaceDest = null
-        this.blendMode = options.blendMode ?? 'normal'
         this._children = []
-        this._update = false
+        this._dest = null
     }
 
-    public get update() {
-        if (this._update) {
+    public renderFront(masterStream: RenderStream, effectStream: EffectStream) {
+        this._dest = this._dest ? this._dest : masterStream.renderer.createRenderStream()
+
+        if (this.requiresUpdate()) {
+            // Clear rendering contents
+            this._dest.blendMode.blend({
+                blendMode: BLEND_MODES['clear'],
+                opacity: 0.0,
+            })
+
+            for (let i = 0; i < this._children.length; i++) {
+                this._children[i].render(this._dest, effectStream)
+            }
+        }
+
+        this.refreshUpdate(false)
+
+        return this._dest.dest.getColorTexture()
+    }
+
+    public setChildren(children: Container[]) {
+        this._children = children
+        this.update = true
+    }
+
+    public requiresUpdate(): boolean {
+        if (this.update) {
             return true
         }
 
         for (let i = 0; i < this._children.length; i++) {
-            if (this._children[i].update) return true
+            if (this._children[i].requiresUpdate()) {
+                return true
+            }
         }
+
         return false
     }
 
-    public set update(update: boolean) {
-        if (update) {
-            this._update = true
-        } else {
-            for (let i = 0; i < this._children.length; i++) {
-                this._children[i].update = false
-            }
+    public refreshUpdate(update: boolean = false) {
+        this.update = update
+
+        for (let i = 0; i < this._children.length; i++) {
+            this._children[i].refreshUpdate(update)
         }
-    }
-
-    public get children() {
-        return this._children
-    }
-
-    public setChildren(children: (Group | ILayer)[]) {
-        this._children = children
-    }
-
-    public render(pipeline: RenderPipeline): void {
-        if (this.blendMode === 'normal') {
-            this._surfaceDest?.destroy()
-            this._surface = null
-            this._surfaceDest = null
-
-            super.render(pipeline)
-        } else {
-            if (this._surface && !this.update) {
-                this._surface.render(pipeline)
-                return
-            }
-
-            const surfaceDest = this.generateSurfaceDestination(
-                pipeline.renderer,
-                pipeline.renderer.width,
-                pipeline.renderer.height
-            )
-
-            super.render(surfaceDest)
-
-            const sprite = new TextureSprite({
-                transform: mat3.identity(mat3.create()),
-                texture: surfaceDest.target.getColorTexture(),
-            })
-
-            this._surface = new Effect({
-                blendMode: this.blendMode,
-                opacity: this.getOpacity(),
-                sprite,
-            })
-
-            this._surface.render(pipeline)
-        }
-    }
-
-    public generateSurfaceDestination(renderer: WebGLRenderer, width: number, height: number) {
-        if (this._surfaceDest) {
-            this._surfaceDest.resize(new Vec2(width, height))
-            return this._surfaceDest
-        }
-
-        return (this._surfaceDest = new RenderPipeline(renderer, {
-            width,
-            height,
-        }))
     }
 }
