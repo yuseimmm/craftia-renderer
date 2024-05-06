@@ -1,4 +1,5 @@
 import { WebGLRenderer } from '../WebGLRenderer'
+import { Vec4 } from '../units'
 import { FrameBuffer } from './FrameBuffer'
 
 export class FrameBufferManager {
@@ -22,7 +23,7 @@ export class FrameBufferManager {
     public update(frameBuffer: FrameBuffer) {
         const glFbo = frameBuffer.generateGLframeBuffer(this._renderer.gl)
 
-        if (glFbo.necessaryUpdate(frameBuffer.version)) {
+        if (glFbo.requiresUpdate(frameBuffer.version)) {
             glFbo.bind()
 
             const texture = frameBuffer.getColorTexture()
@@ -40,6 +41,30 @@ export class FrameBufferManager {
 
             glFbo.setVersion(frameBuffer.version)
         }
+    }
+
+    public clear(frameBuffer: FrameBuffer, color: Vec4 = new Vec4(0, 0, 0, 0)) {
+        this.bind(frameBuffer)
+        this._renderer.clear(color)
+        this.unbind()
+    }
+
+    public readPixcels(frameBuffer: FrameBuffer) {
+        const u8 = new Uint8Array(
+            this._renderer.gl.drawingBufferWidth * this._renderer.gl.drawingBufferHeight * 4
+        )
+
+        this.bind(frameBuffer)
+        this._renderer.gl.readPixels(
+            0,
+            0,
+            frameBuffer.width,
+            frameBuffer.height,
+            WebGL2RenderingContext.RGBA,
+            WebGL2RenderingContext.UNSIGNED_BYTE,
+            u8
+        )
+        return u8
     }
 
     public unbind() {

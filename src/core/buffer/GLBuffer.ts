@@ -57,7 +57,7 @@ export class GLBuffer {
         this._byteLength = 0
     }
 
-    public necessaryUpdate(version: number) {
+    public requiresUpdate(version: number) {
         return this._version !== version
     }
 

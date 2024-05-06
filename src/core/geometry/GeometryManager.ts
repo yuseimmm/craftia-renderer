@@ -13,7 +13,7 @@ export class GeometryManager {
 
         vao.bind()
 
-        if (vao.necessaryUpdate(geometry.version)) {
+        if (vao.requiresUpdate(geometry.version)) {
             for (let i = 0; i < geometry.attributes.length; i++) {
                 const attr = geometry.attributes[i]
                 const buffer = geometry.buffers[attr.buffer]

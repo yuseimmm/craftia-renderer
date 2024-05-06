@@ -11,7 +11,7 @@ export class UniformLocation {
         return this._location
     }
 
-    public necessaryUpdate(shaderID: number | null) {
+    public requiresUpdate(shaderID: number | null) {
         return this._shaerID !== shaderID
     }
 

@@ -26,7 +26,7 @@ export class BufferManager {
      */
     public update(buffer: AbstractBuffer) {
         const glBuffer = buffer.generateGLBuffer(this._renderer.gl)
-        if (glBuffer.necessaryUpdate(buffer.version)) {
+        if (glBuffer.requiresUpdate(buffer.version)) {
             glBuffer.setData(buffer.version, buffer.data)
         }
     }

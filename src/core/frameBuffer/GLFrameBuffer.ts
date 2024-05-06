@@ -16,7 +16,7 @@ export class GLFrameBuffer {
         this._version = 0
     }
 
-    public necessaryUpdate(version: number) {
+    public requiresUpdate(version: number) {
         return version !== this._version
     }
 

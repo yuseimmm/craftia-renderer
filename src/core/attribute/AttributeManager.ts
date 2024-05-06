@@ -15,7 +15,7 @@ export class AttributeManager {
     public update(attr: Attribute) {
         const shaderManager = this._renderer.shader
 
-        if (attr.location.necessaryUpdate(shaderManager.activeShader?.id ?? null)) {
+        if (attr.location.requiresUpdate(shaderManager.activeShader?.id ?? null)) {
             attr.location.update(
                 shaderManager.activeShader?.id ?? null,
                 shaderManager.getAttribLocation(attr.name)

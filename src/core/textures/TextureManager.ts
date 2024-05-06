@@ -23,7 +23,7 @@ export class TextureManager {
     public update(texture: Texture, unitNumber: number) {
         const glTexture = texture.generateGLtexture(this._renderer.gl)
 
-        if (glTexture.necessaryUpdate(texture.version)) {
+        if (glTexture.requiresUpdate(texture.version)) {
             glTexture.setPixcels(
                 unitNumber,
                 texture.version,
