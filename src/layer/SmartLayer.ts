@@ -1,60 +1,54 @@
 import { mat3 } from 'gl-matrix'
-import { Container, ContainerOptions } from '../contanier'
+import { BLEND_MODES } from '../blend-modes'
+import { Container } from '../contanier'
 import { Texture, Vec2 } from '../core'
-import { Effect } from '../effect/Effect'
+import { RenderStream } from '../stream'
 import { TextureSprite } from '../sprite'
 import { ILayer } from './ILayer'
-import { BLEND_MODES } from '../blend-modes'
 
-export type SmartLayerOptions = Partial<ContainerOptions> & {
+export type SmartLayerOptions = {
     blendMode?: keyof typeof BLEND_MODES
+    scaling?: Vec2
     translation?: Vec2
     rotation?: number
-    scaling?: Vec2
     transform?: mat3
+    visible?: boolean
+    opacity?: number
+    fill?: number
     texture: Texture
 }
 
 export class SmartLayer extends Container implements ILayer {
-    public blendMode: keyof typeof BLEND_MODES
-    public translation: Vec2
-    public rotation: number
-    public scaling: Vec2
-    public transform: mat3
-    public update: boolean
-
-    public source: Effect<TextureSprite>
+    private _sprite: TextureSprite
 
     constructor(options: SmartLayerOptions) {
         super(options)
 
-        this.blendMode = options.blendMode ?? 'normal'
-        this.translation = options.translation ?? new Vec2(0, 0)
-        this.rotation = options.rotation ?? 0
-        this.scaling = options.scaling ?? new Vec2(1, 1)
-        this.transform = options.transform ?? mat3.identity(mat3.create())
-        this.update = false
-
-        this.source = new Effect({
-            blendMode: this.blendMode,
-            opacity: this.getOpacity(),
-
-            sprite: new TextureSprite({
-                transform: this._createTransform(),
-                texture: options.texture,
-            }),
-        })
+        this._sprite = new TextureSprite({ texture: options.texture })
     }
 
-    public get children() {
-        this.source.opacity = this.getOpacity()
-        this.source.blendMode = this.blendMode
-
-        return [this.source]
+    public get rotation() {
+        return super.rotation
     }
 
-    public updateTransform() {
-        this.source.sprite.transform = this._createTransform()
+    public set rotation(rotation: number) {
+        super.rotation = rotation
+    }
+
+    public get transform() {
+        return super.transform
+    }
+
+    public set transform(transform: mat3) {
+        super.transform = transform
+    }
+
+    public get scaling() {
+        return super.scaling
+    }
+
+    public set scaling(scaling: Vec2) {
+        super.scaling = scaling
     }
 
     public clone() {
@@ -62,23 +56,19 @@ export class SmartLayer extends Container implements ILayer {
             visible: this.visible,
             blendMode: this.blendMode,
             opacity: this.opacity,
-            parent: { ...this.parent },
-            texture: this.source.sprite.texture,
+            texture: this._sprite.texture,
             translation: this.translation,
             rotation: this.rotation,
             scaling: this.scaling,
+            fill: this.fill,
             transform: mat3.clone(this.transform),
         })
     }
 
-    private _createTransform() {
-        const matrix = mat3.create()
+    public renderFront(masterStream: RenderStream) {
+        this._sprite.setTransform(this.projectionMatrix)
+        this._sprite.render(masterStream.renderer, masterStream.front)
 
-        mat3.scale(matrix, matrix, this.scaling.toArray())
-        mat3.rotate(matrix, matrix, this.rotation)
-        mat3.translate(matrix, matrix, this.translation.toArray())
-        mat3.multiply(matrix, matrix, this.transform)
-
-        return matrix
+        return masterStream.front.getColorTexture()
     }
 }
