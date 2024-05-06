@@ -1,5 +1,5 @@
 import { MeshManager } from '../mesh/MeshManager'
-import { RenderPipeline, RenderPipelineOptions } from '../pipeline'
+import { RenderStream } from '../stream'
 import { AttributeManager } from './attribute'
 import { BufferManager } from './buffer'
 import { FrameBufferManager } from './frameBuffer'
@@ -55,7 +55,7 @@ export class WebGLRenderer {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT)
         return this
     }
-    public createRenderPipeline(options: RenderPipelineOptions = {}) {
-        return new RenderPipeline(this, options)
+    public createRenderStream(width?: number, height?: number) {
+        return new RenderStream(this, width ?? this.width, height ?? this.height)
     }
 }
