@@ -10,9 +10,9 @@ The aim of this project is to develop a fast, lightweight 2D rendering library f
 - Layer Grouping
 - Transformations (rotation, scaling, translation, and other transformations)
 - Texture Rendering
+- Layer Effects
 ### Work in Progress 🏗️
 - Layer Masks
-- Layer Effects
 - Filters
 
 ## Usage
@@ -30,7 +30,15 @@ const main = async () => {
         width: 1920,
         height: 1080
     })
-    const renderPipeline = renderer.createRenderPipeline();
+    const masterStream = renderer.createRenderStream();
+    
+    const effectStream = new CRAFTIA.EffectStream(
+        renderer,
+        renderer.width,
+        renderer.height,
+        masterStream.base.getColorTexture(),
+        masterStream.front.getColorTexture()
+    )
 
     const layer = new CRAFTIA.SmartLayer({
         texture: await CRAFTIA.createTextureAsync('./img/sample.png'),
@@ -41,8 +49,8 @@ const main = async () => {
         opacity: 1.0
     })
 
-    layer.render(renderPipeline);
-    renderPipeline.renderScreen();
+    layer.render(masterStream, effectStream, {});
+    masterStream.renderScreen();
 }
 
 main();
