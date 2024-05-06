@@ -51,7 +51,7 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             return
         }
 
-        console.error('Uniform types do not match.')
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 
     private bindNumber(gl: WebGL2RenderingContext, value: number) {
