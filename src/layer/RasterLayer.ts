@@ -14,7 +14,7 @@ export type RasterLayerOptions = {
     texture: Texture
 }
 
-export class RasterLayer extends Container implements ILayer {
+export class RasterLayer extends Container implements ILayer<RasterLayerOptions> {
     private _sprite: TextureSprite
 
     constructor(options: RasterLayerOptions) {
@@ -35,7 +35,7 @@ export class RasterLayer extends Container implements ILayer {
             translation: this.translation,
             fill: this.fill,
             texture: this._sprite.texture,
-            ...options
+            ...options,
         })
     }
 

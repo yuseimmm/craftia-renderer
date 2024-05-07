@@ -18,7 +18,7 @@ export type SmartLayerOptions = {
     texture: Texture
 }
 
-export class SmartLayer extends Container implements ILayer {
+export class SmartLayer extends Container implements ILayer<SmartLayerOptions> {
     private _sprite: TextureSprite
 
     constructor(options: SmartLayerOptions) {
@@ -51,7 +51,7 @@ export class SmartLayer extends Container implements ILayer {
         super.scaling = scaling
     }
 
-    public clone() {
+    public clone(options: Partial<SmartLayerOptions>) {
         return new SmartLayer({
             visible: this.visible,
             blendMode: this.blendMode,
@@ -62,6 +62,7 @@ export class SmartLayer extends Container implements ILayer {
             scaling: this.scaling,
             fill: this.fill,
             transform: mat3.clone(this.transform),
+            ...options,
         })
     }
 
