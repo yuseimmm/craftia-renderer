@@ -14,10 +14,12 @@ export class AttributeManager {
     }
     public update(attr: Attribute) {
         const shaderManager = this._renderer.shader
-
-        if (attr.location.requiresUpdate(shaderManager.activeShader?.id ?? null)) {
+        if (
+            shaderManager.activeShader &&
+            attr.location.requiresUpdate(shaderManager.activeShader.id)
+        ) {
             attr.location.update(
-                shaderManager.activeShader?.id ?? null,
+                shaderManager.activeShader.id,
                 shaderManager.getAttribLocation(attr.name)
             )
         }
