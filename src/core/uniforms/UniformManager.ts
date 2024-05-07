@@ -35,9 +35,12 @@ export class UniformManager {
     public update(uniform: Uniform) {
         const shaderManager = this.renderer.shader
 
-        if (uniform.location.requiresUpdate(shaderManager.activeShader?.id ?? null)) {
+        if (
+            shaderManager.activeShader &&
+            uniform.location.requiresUpdate(shaderManager.activeShader.id)
+        ) {
             uniform.location.update(
-                shaderManager.activeShader?.id ?? null,
+                shaderManager.activeShader.id,
                 shaderManager.getUniformLocation(uniform.name)
             )
         }
