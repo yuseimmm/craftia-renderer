@@ -167,10 +167,7 @@ export abstract class Container {
         return this.projectionMatrix
     }
 
-    public render(
-        masterStream: RenderStream,
-        options: ContainerRenderOptions = {}
-    ) {
+    public render(masterStream: RenderStream, options: ContainerRenderOptions = {}) {
         masterStream.spin()
 
         const front = this.renderFront(masterStream)
@@ -180,7 +177,6 @@ export abstract class Container {
             blendMode: BLEND_MODES[this._blendMode],
             opacity: this.opacity * this.fill * (options.parentOpacity ?? 1.0),
         })
-
     }
 
     // override!!
