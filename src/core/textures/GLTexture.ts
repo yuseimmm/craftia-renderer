@@ -1,31 +1,52 @@
+import { valueof } from '../../types'
 import { Vec2 } from '../units'
 
 export type TexOptions = {
     /** A GLint specifying the level of detail. */
     level?: number
     /**A GLenum specifying the color components in the texture. */
-    internalformat?: GLenum
+    internalformat?: valueof<typeof TEXTURE_FORMAT>
     /**A GLenum specifying the format of the texel data. */
-    format?: GLenum
+    format?: valueof<typeof TEXTURE_FORMAT>
     /**A GLenum specifying the data type of the texel data. */
-    type?: GLenum
+    type?: valueof<typeof TEXTURE_TYPE>
     /**A GLint specifying the width of the border. Must be 0. */
     border?: number
     repeat?: boolean
     flipY?: boolean
-    magFilter?: GLenum
-    minFilter?: GLenum
+    magFilter?: valueof<typeof TEXTURE_MAG_FILTER>
+    minFilter?: valueof<typeof TEXTURE_MIN_FILTER>
 }
 
-export type TextureMinFilter = WebGL2RenderingContext[
-    | 'NEAREST'
-    | 'LINEAR'
-    | 'NEAREST_MIPMAP_NEAREST'
-    | 'NEAREST_MIPMAP_LINEAR'
-    | 'LINEAR_MIPMAP_NEAREST'
-    | 'LINEAR_MIPMAP_LINEAR']
+// TODO : Add parameters that can be used with `WebGL2RenderingContext`.
+export const TEXTURE_MIN_FILTER = {
+    NEAREST: 9728,
+    LINEAR: 9729,
+    NEAREST_MIPMAP_NEAREST: 9984,
+    NEAREST_MIPMAP_LINEAR: 9986,
+    LINEAR_MIPMAP_NEAREST: 9985,
+    LINEAR_MIPMAP_LINEAR: 9987,
+} as const
 
-export type TextureMagFilter = WebGL2RenderingContext['NEAREST' | 'LINEAR']
+export const TEXTURE_MAG_FILTER = {
+    LINEAR: 9729,
+    NEAREST: 9728,
+} as const
+
+export const TEXTURE_FORMAT = {
+    RGBA: 6408,
+    RGB: 6407,
+    LUMINANCE_ALPHA: 6410,
+    LUMINANCE: 6409,
+    ALPHA: 6406,
+} as const
+
+export const TEXTURE_TYPE = {
+    UNSIGNED_BYTE: 5121,
+    UNSIGNED_SHORT_5_6_5: 33635,
+    UNSIGNED_SHORT_4_4_4_4: 32819,
+    UNSIGNED_SHORT_5_5_5_1: 32820,
+} as const
 
 export type TexImageSource =
     | OffscreenCanvas
@@ -46,31 +67,31 @@ export class GLTexture {
     public readonly webGLTexture: WebGLTexture
     /** A GLint specifying the level of detail. */
     public readonly level: number
-    public readonly internalformat: GLenum
+    public readonly internalformat: valueof<typeof TEXTURE_FORMAT>
     /**A GLenum specifying the format of the texel data. */
-    public readonly format: GLenum
+    public readonly format: valueof<typeof TEXTURE_FORMAT>
     /**A GLenum specifying the data type of the texel data. */
-    public readonly type: GLenum
+    public readonly type: valueof<typeof TEXTURE_TYPE>
     /**A GLint specifying the width of the border. Must be 0. */
     public readonly border: number = 0
     public readonly repeat: boolean
     public readonly flipY: boolean
 
-    public readonly magFilter: GLenum
-    public readonly minFilter: GLenum
+    public readonly magFilter: valueof<typeof TEXTURE_MAG_FILTER>
+    public readonly minFilter: valueof<typeof TEXTURE_MIN_FILTER>
 
     constructor(
         gl: WebGL2RenderingContext,
         {
             level = 0,
-            internalformat = gl.RGBA,
-            format = gl.RGBA,
-            type = gl.UNSIGNED_BYTE,
+            internalformat = TEXTURE_FORMAT.RGBA,
+            format = TEXTURE_FORMAT.RGBA,
+            type = TEXTURE_TYPE.UNSIGNED_BYTE,
             border = 0,
             repeat = false,
             flipY = true,
-            magFilter = WebGL2RenderingContext.NEAREST,
-            minFilter = WebGL2RenderingContext.NEAREST,
+            magFilter = TEXTURE_MAG_FILTER.NEAREST,
+            minFilter = TEXTURE_MIN_FILTER.NEAREST,
         }: TexOptions = {}
     ) {
         this.gl = gl
