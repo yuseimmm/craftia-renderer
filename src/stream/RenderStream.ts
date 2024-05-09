@@ -1,6 +1,8 @@
+import { WebGLRenderer } from '../WebGLRenderer'
 import { BlendModeStream } from '../blend-modes/BlendModeStream'
-import { FrameBuffer, Vec2, WebGLRenderer } from '../core'
+import { FrameBuffer } from '../frameBuffer'
 import { TextureSprite } from '../sprite'
+import { Vec2 } from '../units'
 
 /**
  * Class that manages the frame buffer for cosecutive drawings.

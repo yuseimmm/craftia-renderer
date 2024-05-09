@@ -1,4 +1,4 @@
-import { valueof } from '../../types'
+import { valueof } from '../types'
 import { WebGLRenderer } from '../WebGLRenderer'
 import { AbstractBuffer } from './AbstractBuffer'
 import { BUFFER_TYPE } from './GLBuffer'

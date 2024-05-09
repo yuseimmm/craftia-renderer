@@ -1,6 +1,6 @@
 import { RasterLayer } from '../src/layer'
-import { Texture } from '../src/core/textures';
-import { Vec2 } from '../src/core/units';
+import { Texture } from '../src/textures';
+import { Vec2 } from '../src/units';
 
 describe('rasterLayer test', () => {
     it('should accept constructor arguments', () => {

@@ -1,4 +1,4 @@
-import { valueof } from '../../types'
+import { valueof } from '../types'
 
 export type BufferParam = {
     usage?: valueof<typeof BUFFER_USAGE>

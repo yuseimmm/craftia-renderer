@@ -1,5 +1,5 @@
-import { MeshManager } from '../mesh/MeshManager'
-import { RenderStream } from '../stream'
+import { MeshManager } from './mesh/MeshManager'
+import { RenderStream } from './stream'
 import { AttributeManager } from './attribute'
 import { BufferManager } from './buffer'
 import { FrameBufferManager } from './frameBuffer'

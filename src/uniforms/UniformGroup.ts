@@ -1,4 +1,4 @@
-import { type valueof } from '../../types'
+import { type valueof } from '../types'
 import { Uniform, type UniformType } from './Uniform'
 
 export type Uniforms = {

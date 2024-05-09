@@ -3,8 +3,8 @@ import {
     type IndexBufferData,
     VertexBuffer,
     IndexBuffer,
-} from '../core/buffer'
-import { GEOMETRY_TOPOLOGY, Geometry } from '../core/geometry'
+} from '../buffer'
+import { GEOMETRY_TOPOLOGY, Geometry } from '../geometry'
 import { valueof } from '../types'
 
 export type MeshGeometryOptions = {

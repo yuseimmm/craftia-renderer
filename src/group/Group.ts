@@ -1,5 +1,5 @@
 import { Container } from '../contanier'
-import { Vec2 } from '../core'
+import { Vec2 } from '../units'
 import { RenderStream } from '../stream'
 import { BLEND_MODES } from '../blend-modes'
 

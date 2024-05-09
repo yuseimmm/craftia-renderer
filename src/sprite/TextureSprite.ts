@@ -1,13 +1,13 @@
 import { mat3 } from 'gl-matrix'
-import { FrameBuffer } from '../core/frameBuffer'
-import { Shader } from '../core/shader'
-import { Texture } from '../core/textures'
-import { WebGLRenderer } from '../core/WebGLRenderer'
+import { FrameBuffer } from '../frameBuffer'
+import { Shader } from '../shader'
+import { Texture } from '../textures'
+import { WebGLRenderer } from '../WebGLRenderer'
 import { MeshGeometry } from '../mesh/MeshGeometry'
 import { Mesh } from '../mesh/Mesh'
 import { defaultVertex } from './shaders/defaultVertex'
 import { defaultFragment } from './shaders/defaultFragment'
-import { UniformGroup, Uniforms } from '../core/uniforms/UniformGroup'
+import { UniformGroup, Uniforms } from '../uniforms/UniformGroup'
 import { ISprite } from './ISprite'
 
 const TEXTURE_UNITNUMBER = 0

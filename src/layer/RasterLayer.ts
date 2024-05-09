@@ -1,9 +1,10 @@
 import { BLEND_MODES } from '../blend-modes'
 import { Container } from '../contanier'
-import { Texture, Vec2 } from '../core'
 import { RenderStream } from '../stream'
 import { TextureSprite } from '../sprite'
 import { ILayer } from './ILayer'
+import { Vec2 } from '../units'
+import { Texture } from '../textures'
 
 export type RasterLayerOptions = {
     blendMode?: keyof typeof BLEND_MODES

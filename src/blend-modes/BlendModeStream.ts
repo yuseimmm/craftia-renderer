@@ -2,7 +2,8 @@ import { BLEND_MODES, BlendMode } from './BlendMode'
 import { Mesh } from '../mesh/Mesh'
 import { MeshGeometry } from '../mesh/MeshGeometry'
 import { RenderStream } from '../stream/RenderStream'
-import { FrameBuffer, Texture } from '../core'
+import { FrameBuffer } from '../frameBuffer'
+import { Texture } from '../textures'
 import { mat3 } from 'gl-matrix'
 
 export type BlendOptions = {

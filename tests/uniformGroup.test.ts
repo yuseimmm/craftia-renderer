@@ -1,4 +1,4 @@
-import { UniformGroup } from '../src/core/uniforms';
+import { UniformGroup } from '../src/uniforms';
 
 describe('uniformgroup test', () => {
     it('should accept constructor arguments', () => {

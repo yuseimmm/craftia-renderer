@@ -1,5 +1,5 @@
-import { IndexBuffer, VertexBuffer } from '../src/core/buffer';
-import { Geometry } from '../src/core/geometry';
+import { IndexBuffer, VertexBuffer } from '../src/buffer';
+import { Geometry } from '../src/geometry';
 
 describe('geometry. test', () => {
     it('should accept `attributes` in constructor arguments', () => {

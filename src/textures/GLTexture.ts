@@ -1,4 +1,4 @@
-import { valueof } from '../../types'
+import { valueof } from '../types'
 import { Vec2 } from '../units'
 
 export type TexOptions = {

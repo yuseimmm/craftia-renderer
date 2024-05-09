@@ -1,6 +1,7 @@
 import { mat3 } from 'gl-matrix'
 import { BLEND_MODES } from '../blend-modes'
-import { Texture, Vec2 } from '../core'
+import { Texture } from '../textures'
+import { Vec2 } from '../units'
 import { RenderStream } from '../stream'
 
 export type ContainerParentProps = {

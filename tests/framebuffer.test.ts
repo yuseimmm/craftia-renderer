@@ -1,5 +1,5 @@
-import { FrameBuffer } from '../src/core/frameBuffer';
-import { Vec2 } from '../src/core/units';
+import { FrameBuffer } from '../src/frameBuffer';
+import { Vec2 } from '../src/units';
 
 describe('framebuffer. test', () => {
     it('When the size of the frame buffer is changed, the size of the texture must also be changed.', () => {

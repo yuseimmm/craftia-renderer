@@ -1,4 +1,4 @@
-import { valueof } from '../../types'
+import { valueof } from '../types'
 import { Attribute } from '../attribute'
 import { AbstractBuffer } from '../buffer/AbstractBuffer'
 import { IndexBuffer } from '../buffer/IndexBuffer'

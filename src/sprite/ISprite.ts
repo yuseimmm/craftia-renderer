@@ -1,5 +1,7 @@
 import { mat3 } from 'gl-matrix'
-import { FrameBuffer, Shader, WebGLRenderer } from '../core'
+import { WebGLRenderer } from '../WebGLRenderer'
+import { FrameBuffer } from '../frameBuffer'
+import { Shader } from '../shader'
 
 export interface ISprite {
     width: number
