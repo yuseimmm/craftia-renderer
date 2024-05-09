@@ -27,6 +27,10 @@ export class SmartLayer extends Container implements ILayer<SmartLayerOptions> {
         this._sprite = new TextureSprite({ texture: options.texture })
     }
 
+    public get texture() {
+        return this._sprite.texture
+    }
+
     public get rotation() {
         return super.rotation
     }
