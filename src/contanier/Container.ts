@@ -22,7 +22,7 @@ export type ContainerRenderOptions = {
     parentOpacity?: number
 }
 
-export abstract class Container {
+export class Container {
     private _blendMode: keyof typeof BLEND_MODES
     private _scaling: Vec2
     private _translation: Vec2
@@ -34,7 +34,6 @@ export abstract class Container {
     protected projectionMatrix: mat3
 
     protected update: boolean
-    public updateEffects: boolean
 
     constructor({
         blendMode,
@@ -45,7 +44,7 @@ export abstract class Container {
         visible,
         opacity,
         fill,
-    }: Partial<ContainerOptions>) {
+    }: Partial<ContainerOptions> = {}) {
         this._blendMode = blendMode ?? 'normal'
         this._scaling = scaling ?? new Vec2(1, 1)
         this._translation = translation ?? new Vec2(0, 0)
@@ -57,7 +56,6 @@ export abstract class Container {
 
         this.projectionMatrix = mat3.create()
         this.update = false
-        this.updateEffects = false
 
         this.updateProjectionMatrix()
     }
@@ -107,7 +105,6 @@ export abstract class Container {
 
         this.updateProjectionMatrix()
         this.update = true
-        this.updateEffects = true
     }
 
     protected get rotation() {
@@ -119,7 +116,6 @@ export abstract class Container {
 
         this.updateProjectionMatrix()
         this.update = true
-        this.updateEffects = true
     }
 
     protected get transform() {
@@ -131,7 +127,6 @@ export abstract class Container {
 
         this.updateProjectionMatrix()
         this.update = true
-        this.updateEffects = true
     }
 
     protected get scaling() {
@@ -143,7 +138,6 @@ export abstract class Container {
 
         this.updateProjectionMatrix()
         this.update = true
-        this.updateEffects = true
     }
 
     public updateProjectionMatrix() {
@@ -172,6 +166,10 @@ export abstract class Container {
 
         const front = this.renderFront(masterStream)
 
+        if (!front) {
+            return;
+        }
+
         masterStream.blendMode.blend({
             front: front,
             blendMode: BLEND_MODES[this._blendMode],
@@ -180,5 +178,7 @@ export abstract class Container {
     }
 
     // override!!
-    abstract renderFront(masterPipeline: RenderStream): Texture
+    public renderFront(masterPipeline: RenderStream): Texture | null {
+        return null
+    }
 }
