@@ -1,4 +1,4 @@
-import { Texture } from '../textures'
+import { Texture } from './textures'
 
 export const createTextureAsync = async (src: string) => {
     const img = new Image()
