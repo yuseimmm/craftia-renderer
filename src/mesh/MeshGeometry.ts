@@ -4,13 +4,14 @@ import {
     VertexBuffer,
     IndexBuffer,
 } from '../core/buffer'
-import { Geometry } from '../core/geometry'
+import { GEOMETRY_TOPOLOGY, Geometry } from '../core/geometry'
+import { valueof } from '../types'
 
 export type MeshGeometryOptions = {
     positions?: VertexBuferData
     uvs?: VertexBuferData
     indices?: IndexBufferData
-    topology?: GLenum
+    topology?: valueof<typeof GEOMETRY_TOPOLOGY>
     interleave?: boolean
 }
 
@@ -35,7 +36,7 @@ export class MeshGeometry extends Geometry {
         const positionBuffer = new VertexBuffer(positions)
         const uvBuffer = new VertexBuffer(uvs)
         const indicesBuffer = new IndexBuffer(indices)
-        const topology = options.topology || WebGL2RenderingContext.TRIANGLES
+        const topology = options.topology || GEOMETRY_TOPOLOGY.TRIANGLES
 
         super({
             attributes: {
