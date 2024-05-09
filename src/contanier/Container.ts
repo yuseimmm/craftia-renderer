@@ -167,7 +167,7 @@ export class Container {
         const front = this.renderFront(masterStream)
 
         if (!front) {
-            return;
+            return
         }
 
         masterStream.blendMode.blend({
@@ -178,7 +178,9 @@ export class Container {
     }
 
     // override!!
-    public renderFront(masterPipeline: RenderStream): Texture | null {
+    public renderFront(
+        masterPipeline: RenderStream // eslint-disable-line
+    ): Texture | null {
         return null
     }
 }
