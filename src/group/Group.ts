@@ -15,7 +15,7 @@ export class Group extends Container {
     private _children: Container[]
     private _dest: RenderStream | null
 
-    constructor(options: GroupOptions) {
+    constructor(options: GroupOptions = {}) {
         super(options)
         this._children = []
         this._dest = null
