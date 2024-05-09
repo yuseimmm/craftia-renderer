@@ -1,9 +1,4 @@
-import {
-    type VertexBuferData,
-    type IndexBufferData,
-    VertexBuffer,
-    IndexBuffer,
-} from '../buffer'
+import { type VertexBuferData, type IndexBufferData, VertexBuffer, IndexBuffer } from '../buffer'
 import { GEOMETRY_TOPOLOGY, Geometry } from '../geometry'
 import { valueof } from '../types'
 
