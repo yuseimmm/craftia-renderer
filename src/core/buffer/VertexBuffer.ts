@@ -1,5 +1,5 @@
 import { AbstractBuffer } from './AbstractBuffer'
-import { GLBuffer } from './GLBuffer'
+import { BUFFER_TYPE, GLBuffer } from './GLBuffer'
 
 export type VertexBuferData = Float32Array | Float64Array
 
@@ -22,6 +22,6 @@ export class VertexBuffer extends AbstractBuffer<GLBuffer, VertexBuferData> {
 
         this.gl = gl
 
-        return (this.glBuffer = new GLBuffer(gl, gl.ARRAY_BUFFER))
+        return (this.glBuffer = new GLBuffer(gl, BUFFER_TYPE.ARRAY_BUFFER))
     }
 }

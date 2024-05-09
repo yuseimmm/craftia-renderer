@@ -1,5 +1,7 @@
+import { valueof } from '../../types'
+
 export type BufferParam = {
-    usage?: BufferUsage
+    usage?: valueof<typeof BUFFER_USAGE>
 }
 
 export interface IArrayBuffer extends ArrayBuffer {}
@@ -10,26 +12,28 @@ export interface ITypedArray extends IArrayBuffer {
     readonly BYTES_PER_ELEMENT: number
 }
 
-export type BufferType = WebGL2RenderingContext[
-    | 'ARRAY_BUFFER'
-    | 'ELEMENT_ARRAY_BUFFER'
-    | 'COPY_READ_BUFFER'
-    | 'COPY_WRITE_BUFFER'
-    | 'TRANSFORM_FEEDBACK_BUFFER'
-    | 'UNIFORM_BUFFER'
-    | 'PIXEL_PACK_BUFFER'
-    | 'PIXEL_UNPACK_BUFFER']
+export const BUFFER_TYPE = {
+    ARRAY_BUFFER: 34962,
+    ELEMENT_ARRAY_BUFFER: 34963,
+    COPY_READ_BUFFER: 36662,
+    COPY_WRITE_BUFFER: 36663,
+    TRANSFORM_FEEDBACK_BUFFER: 35982,
+    UNIFORM_BUFFER: 35345,
+    PIXEL_PACK_BUFFER: 35051,
+    PIXEL_UNPACK_BUFFER: 35052,
+} as const
 
-export type BufferUsage = WebGL2RenderingContext[
-    | 'STATIC_DRAW'
-    | 'DYNAMIC_DRAW'
-    | 'STREAM_DRAW'
-    | 'STATIC_READ'
-    | 'DYNAMIC_READ'
-    | 'STREAM_READ'
-    | 'STATIC_COPY'
-    | 'DYNAMIC_COPY'
-    | 'STREAM_COPY']
+export const BUFFER_USAGE = {
+    STATIC_DRAW: 35044,
+    DYNAMIC_DRAW: 35048,
+    STREAM_DRAW: 35040,
+    STATIC_READ: 35045,
+    DYNAMIC_READ: 35049,
+    STREAM_READ: 35041,
+    STATIC_COPY: 35046,
+    DYNAMIC_COPY: 35050,
+    STREAM_COPY: 35042,
+} as const
 
 /**
  * Wrapper for Typed Arrays to enable transfer to WebGL.
@@ -39,12 +43,12 @@ export class GLBuffer {
     private _byteLength: number
     private _gl: WebGL2RenderingContext
     private _webGLBuffer: WebGLBuffer
-    readonly usage: BufferUsage
-    readonly type: BufferType
+    readonly usage: valueof<typeof BUFFER_USAGE>
+    readonly type: valueof<typeof BUFFER_TYPE>
 
     constructor(
         gl: WebGL2RenderingContext,
-        type: BufferType,
+        type: valueof<typeof BUFFER_TYPE>,
         { usage = gl.STATIC_DRAW }: BufferParam = {}
     ) {
         this._gl = gl

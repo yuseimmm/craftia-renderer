@@ -1,5 +1,5 @@
 import { AbstractBuffer } from './AbstractBuffer'
-import { GLBuffer } from './GLBuffer'
+import { BUFFER_TYPE, GLBuffer } from './GLBuffer'
 
 export type IndexBufferData = Int8Array | Int16Array | Int32Array
 
@@ -22,6 +22,6 @@ export class IndexBuffer extends AbstractBuffer<GLBuffer, IndexBufferData> {
 
         this.gl = gl
 
-        return (this.glBuffer = new GLBuffer(gl, gl.ELEMENT_ARRAY_BUFFER))
+        return (this.glBuffer = new GLBuffer(gl, BUFFER_TYPE.ELEMENT_ARRAY_BUFFER))
     }
 }

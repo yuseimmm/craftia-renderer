@@ -1,6 +1,7 @@
+import { valueof } from '../../types'
 import { WebGLRenderer } from '../WebGLRenderer'
 import { AbstractBuffer } from './AbstractBuffer'
-import { BufferType } from './GLBuffer'
+import { BUFFER_TYPE } from './GLBuffer'
 
 export class BufferManager {
     private _renderer: WebGLRenderer
@@ -35,7 +36,7 @@ export class BufferManager {
      * Unbind the buffer.
      * @param type
      */
-    public unbind(type: BufferType) {
+    public unbind(type: valueof<typeof BUFFER_TYPE>) {
         this._renderer.gl.bindBuffer(type, null)
     }
 }
