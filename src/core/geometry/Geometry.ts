@@ -1,3 +1,4 @@
+import { valueof } from '../../types'
 import { Attribute } from '../attribute'
 import { AbstractBuffer } from '../buffer/AbstractBuffer'
 import { IndexBuffer } from '../buffer/IndexBuffer'
@@ -14,8 +15,18 @@ export type GeometryOptions = {
         }
     }
     indices?: IndexBuffer | Int16Array | number[]
-    topology?: GLenum
+    topology?: valueof<typeof GEOMETRY_TOPOLOGY>
 }
+
+export const GEOMETRY_TOPOLOGY = {
+    POINTS: 0,
+    LINE_STRIP: 3,
+    LINE_LOOP: 2,
+    LINES: 1,
+    TRIANGLE_STRIP: 5,
+    TRIANGLE_FAN: 6,
+    TRIANGLES: 4,
+} as const
 
 /**
  * This class represents a model for vertex buffers and vertex attributes.
@@ -31,7 +42,7 @@ export type GeometryOptions = {
 export class Geometry {
     public buffers: (IndexBuffer | VertexBuffer)[]
     public attributes: Attribute[]
-    public topology: GLenum
+    public topology: valueof<typeof GEOMETRY_TOPOLOGY>
 
     public indexBuffer: IndexBuffer | null
     public version: number
@@ -49,7 +60,7 @@ export class Geometry {
 
         this.version = 0
 
-        this.topology = options.topology || WebGL2RenderingContext.TRIANGLES
+        this.topology = options.topology || GEOMETRY_TOPOLOGY.TRIANGLES
 
         if (options.attributes) {
             for (const [key, a] of Object.entries(options.attributes)) {
