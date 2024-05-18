@@ -4,6 +4,9 @@
   "description": "WebGL-based rendering engine for the image editing application \"craftia\"",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
+  "publishConfig": {
+    "@yuseimmm:registry": "https://npm.pkg.github.com"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
@@ -25,7 +28,6 @@
   },
   "author": "Matsumoto Yusei",
   "license": "UNLICENSED",
-  "private": true,
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/jest": "^29.5.12",
