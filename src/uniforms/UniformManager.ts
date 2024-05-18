@@ -15,8 +15,8 @@ export class UniformManager {
     }
 
     /**
-     * Uniformの値を転送
-     * @param uniform 転送するUniform
+     * Transfers the value of Uniform to the GPU.
+     * @param uniform
      */
     public bind(uniform: Uniform | UniformGroup) {
         if (uniform instanceof Uniform) {
@@ -29,8 +29,8 @@ export class UniformManager {
     }
 
     /**
-     * Uniformをアップデート
-     * @param uniform アップデートするUniform
+     * Update the Uniform location.
+     * @param uniform
      */
     public update(uniform: Uniform) {
         const shaderManager = this.renderer.shader
