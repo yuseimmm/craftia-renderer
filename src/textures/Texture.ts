@@ -54,3 +54,5 @@ export class Texture {
         this.pixcels = null
     }
 }
+
+export const TEXTURE_EMPTY = new Texture()
