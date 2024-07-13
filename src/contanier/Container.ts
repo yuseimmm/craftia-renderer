@@ -1,8 +1,8 @@
 import { mat3 } from 'gl-matrix'
-import { BLEND_MODES } from '../blend-modes'
-import { Texture } from '../textures'
+import { BLEND_MODES } from '../blend-modes/BlendMode'
 import { Vec2 } from '../units'
-import { RenderStream } from '../stream'
+import { WebGLRenderer } from '../WebGLRenderer'
+import { Scene } from '../scene/Scene'
 
 export type ContainerParentProps = {
     opacity?: number
@@ -16,7 +16,6 @@ export interface ContainerOptions {
     transform: mat3
     visible: boolean
     opacity: number
-    fill: number
 }
 
 export type ContainerRenderOptions = {
@@ -31,7 +30,6 @@ export class Container {
     private _transform: mat3
     private _visible: boolean
     private _opacity: number
-    private _fill: number
     protected projectionMatrix: mat3
 
     protected update: boolean
@@ -44,7 +42,6 @@ export class Container {
         transform,
         visible,
         opacity,
-        fill,
     }: Partial<ContainerOptions> = {}) {
         this._blendMode = blendMode ?? 'normal'
         this._scaling = scaling ?? new Vec2(1, 1)
@@ -53,7 +50,6 @@ export class Container {
         this._transform = transform ?? mat3.create()
         this._visible = visible ?? true
         this._opacity = opacity ?? 1.0
-        this._fill = fill ?? 1.0
 
         this.projectionMatrix = mat3.create()
         this.update = false
@@ -75,16 +71,7 @@ export class Container {
     }
 
     public set opacity(opacity: number) {
-        this._opacity = opacity
-        this.update = true
-    }
-
-    public get fill() {
-        return this._fill
-    }
-
-    public set fill(fill: number) {
-        this._fill = fill
+        this._opacity = Math.max(Math.min(1, opacity), 0)
         this.update = true
     }
 
@@ -162,26 +149,5 @@ export class Container {
         return this.projectionMatrix
     }
 
-    public render(masterStream: RenderStream, options: ContainerRenderOptions = {}) {
-        masterStream.spin()
-
-        const front = this.renderFront(masterStream)
-
-        if (!front) {
-            return
-        }
-
-        masterStream.blendMode.blend({
-            front: front,
-            blendMode: BLEND_MODES[this._blendMode],
-            opacity: this.opacity * this.fill * (options.parentOpacity ?? 1.0),
-        })
-    }
-
-    // override!!
-    public renderFront(
-        masterPipeline: RenderStream // eslint-disable-line
-    ): Texture | null {
-        return null
-    }
+    public render(renderer: WebGLRenderer, scene: Scene): void {} // eslint-disable-line
 }
