@@ -3,7 +3,7 @@ import { Texture } from '../textures'
 import { MeshGeometry } from './MeshGeometry'
 
 export type MeshTextures = {
-    [key: number]: Texture | null
+    [key: number]: Texture
 }
 
 export type MeshOptions<SHADER extends Shader> = {
