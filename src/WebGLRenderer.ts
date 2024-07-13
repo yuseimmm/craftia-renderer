@@ -8,6 +8,7 @@ import { ShaderManager } from './shader'
 import { TextureManager } from './textures'
 import { UniformManager } from './uniforms'
 import { Vec4 } from './units'
+import { BlendModeManager } from './blend-modes/BlendModeManager'
 
 export type WebGLRendererOptions = {
     width: number
@@ -24,6 +25,7 @@ export class WebGLRenderer {
     public readonly attribute: AttributeManager
     public readonly frameBuffer: FrameBufferManager
     public readonly mesh: MeshManager
+    public readonly blendMode: BlendModeManager
 
     constructor(gl2: WebGL2RenderingContext, options: WebGLRendererOptions) {
         this.gl = gl2
@@ -35,6 +37,7 @@ export class WebGLRenderer {
         this.attribute = new AttributeManager(this)
         this.frameBuffer = new FrameBufferManager(this)
         this.mesh = new MeshManager(this)
+        this.blendMode = new BlendModeManager(this)
 
         this.resize(options.width, options.height)
     }
