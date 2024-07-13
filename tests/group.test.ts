@@ -1,4 +1,4 @@
-import { RasterLayer } from '../src/layer';
+import { Layer } from '../src/layer';
 import { Group } from '../src/group';
 import { Vec2 } from '../src/units';
 import { Texture } from '../src/textures';
@@ -24,7 +24,7 @@ describe('group test', () => {
     })
 
     it('The update flag of the children should be detected.', () => {
-        const layer = new RasterLayer({
+        const layer = new Layer({
             texture: new Texture()
         })
 

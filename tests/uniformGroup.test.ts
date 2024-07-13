@@ -5,8 +5,9 @@ describe('uniformgroup test', () => {
         const u_opacity = 0
 
         const uniforms = new UniformGroup({
-            'float': {
-                u_opacity
+            "u_opacity": {
+                type: "float",
+                value: u_opacity
             }
         })
 

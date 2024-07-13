@@ -1,4 +1,4 @@
-import { RasterLayer } from '../src/layer'
+import { Layer } from '../src/layer'
 import { Texture } from '../src/textures';
 import { Vec2 } from '../src/units';
 
@@ -10,7 +10,7 @@ describe('rasterLayer test', () => {
         const opacity = 0.1
         const visible = false
 
-        const rasterLayer = new RasterLayer({
+        const rasterLayer = new Layer({
             texture,
             translation,
             blendMode,
