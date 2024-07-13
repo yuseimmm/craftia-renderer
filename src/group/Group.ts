@@ -1,44 +1,50 @@
+import { BLEND_MODES } from '../blend-modes/BlendMode'
 import { Container } from '../contanier'
+import { FrameBuffer } from '../frameBuffer'
+import { Scene } from '../scene/Scene'
+import { Sprite } from '../sprite'
+import { TEXTURE_EMPTY } from '../textures'
 import { Vec2 } from '../units'
-import { RenderStream } from '../stream'
-import { BLEND_MODES } from '../blend-modes'
+import { WebGLRenderer } from '../WebGLRenderer'
 
 export type GroupOptions = {
     blendMode?: keyof typeof BLEND_MODES
     translation?: Vec2
     visible?: boolean
     opacity?: number
-    fill?: number
 }
 
-export class Group extends Container {
-    private _children: Container[]
-    private _dest: RenderStream | null
+export class Group extends Sprite {
+    protected _children: Container[]
+    public _localScene: Scene
 
     constructor(options: GroupOptions = {}) {
-        super(options)
+        super({ ...options, texture: TEXTURE_EMPTY })
+
         this._children = []
-        this._dest = null
+        this._localScene = new Scene([new FrameBuffer(), new FrameBuffer(), new FrameBuffer()])
     }
 
-    public renderFront(masterStream: RenderStream) {
-        this._dest = this._dest ? this._dest : masterStream.renderer.createRenderStream()
-
+    public updateLocalScene(renderer: WebGLRenderer) {
         if (this.requiresUpdate()) {
-            // Clear rendering contents
-            this._dest.blendMode.blend({
-                blendMode: BLEND_MODES['clear'],
-                opacity: 0.0,
-            })
+            this._localScene.clear(renderer, this._localScene.current)
 
             for (let i = 0; i < this._children.length; i++) {
-                this._children[i].render(this._dest)
+                this._children[i].render(renderer, this._localScene)
             }
         }
 
         this.refreshUpdate(false)
+    }
 
-        return this._dest.dest.getColorTexture()
+    public render(renderer: WebGLRenderer, scene: Scene) {
+        this._localScene.width = scene.width
+        this._localScene.height = scene.height
+
+        this.updateLocalScene(renderer)
+
+        super.texture = this._localScene.read(this._localScene.previous)
+        super.render(renderer, scene)
     }
 
     public setChildren(children: Container[]) {
