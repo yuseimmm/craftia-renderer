@@ -1,6 +1,6 @@
 {
   "name": "@yuseimmm/craftia-renderer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The fast 2D rendering engine using WebGL2.",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",

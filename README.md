@@ -5,12 +5,7 @@ The aim of this project is to develop a fast, lightweight 2D rendering library f
 ## Installation
 ### Install from the command line:
 ```sh
-$ npm install @yuseimmm/craftia-renderer@0.0.0
-```
-
-###  Install via package.json:
-```json
-"@yuseimmm/craftia-renderer": "0.0.0"
+$ npm install @yuseimmm/craftia-renderer
 ```
 
 ## Basic Usage Example
