@@ -1,5 +1,4 @@
 import { MeshManager } from './mesh/MeshManager'
-import { RenderStream } from './stream'
 import { AttributeManager } from './attribute'
 import { BufferManager } from './buffer'
 import { FrameBufferManager } from './frameBuffer'
@@ -57,8 +56,5 @@ export class WebGLRenderer {
         this.gl.clearColor(color.x, color.y, color.z, color.w)
         this.gl.clear(this.gl.COLOR_BUFFER_BIT)
         return this
-    }
-    public createRenderStream(width?: number, height?: number) {
-        return new RenderStream(this, width ?? this.width, height ?? this.height)
     }
 }
