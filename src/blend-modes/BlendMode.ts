@@ -38,6 +38,13 @@ export type BlendModeProps = {
     }
 }
 
+export type BlendFuncProps = {
+    srcRGB: GLenum,
+    dstRGB: GLenum,
+    srcAlpha: GLenum,
+    dstAlpha: GLenum
+}
+
 export type BlendModeShader = Shader<
     UniformGroup<{
         u_baseTexture: {
@@ -126,7 +133,7 @@ const createBlendModeShader = (blendMode: BlendModeProps): BlendModeShader => {
 
 // prettier-ignore
 export const BLEND_MODES = {
-    'normal': createBlendModeShader(normalBlend),
+    'normal': normalBlend,
 
     'darken': createBlendModeShader(darkenBlend),
     'multiply': createBlendModeShader(multiplyBlend),
