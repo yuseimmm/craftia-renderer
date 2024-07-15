@@ -1,7 +1,8 @@
 import { Mesh, MeshGeometry } from '../mesh'
+import { SHADER_EMPTY } from '../shader'
 import { Texture } from '../textures'
 import { WebGLRenderer } from '../WebGLRenderer'
-import { BLEND_MODES, BlendModeShader } from './BlendMode'
+import { BlendModeShader } from './BlendMode'
 
 export class BlendModeManager {
     private _mesh: Mesh<BlendModeShader>
@@ -11,7 +12,7 @@ export class BlendModeManager {
         this._mesh = new Mesh({
             geometry: new MeshGeometry(),
             textures: {},
-            shader: BLEND_MODES.normal,
+            shader: SHADER_EMPTY as BlendModeShader,
         })
 
         this._renderer = renderer

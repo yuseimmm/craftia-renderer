@@ -1,15 +1,8 @@
-import { BlendModeProps } from './BlendMode'
+import { BlendFuncProps } from './BlendMode'
 
-export const normalBlend: BlendModeProps = {
-    key: 'normalBlend',
-    bit: {
-        func: /*glsl*/ `
-        vec3 blendNormal(vec3 base, vec3 front, float opacity) {
-            return (front.rgb) * opacity + base * (1.0f - opacity);
-        }
-        `,
-        main: /*glsl*/ `
-        outColor = vec4(blendNormal(base.rgb, front.rgb, front.a), blend);
-        `,
-    },
+export const normalBlend: BlendFuncProps = {
+    srcRGB: WebGL2RenderingContext.SRC_ALPHA,
+    dstRGB: WebGL2RenderingContext.ONE_MINUS_SRC_ALPHA,
+    srcAlpha: WebGL2RenderingContext.ONE,
+    dstAlpha: WebGL2RenderingContext.ONE_MINUS_SRC_ALPHA
 }
