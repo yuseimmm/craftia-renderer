@@ -52,6 +52,9 @@ export class WebGLRenderer {
         this.gl.viewport(0, 0, width, height)
         return this
     }
+    public viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
+        this.gl.viewport(x, y, width, height)
+    }
     public clear(color: Vec4 = new Vec4(0, 0, 0, 0)) {
         this.gl.clearColor(color.x, color.y, color.z, color.w)
         this.gl.clear(this.gl.COLOR_BUFFER_BIT)
