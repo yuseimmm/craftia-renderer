@@ -1,5 +1,5 @@
 import { mat3 } from 'gl-matrix'
-import { BLEND_MODES } from '../blend-modes/BlendMode'
+import { BLEND_MODES, BlendModeShader } from '../blend-modes/BlendMode'
 import { Container } from '../contanier'
 import { Mesh, MeshGeometry } from '../mesh'
 import { Shader } from '../shader'
@@ -27,6 +27,10 @@ export type LayerUniformGroup = UniformGroup<{
         type: 'mat3x3<float>'
         value: mat3
     }
+    u_opacity: {
+        type: 'float'
+        value: number
+    }
 }>
 
 const defaultshader = Shader.from(
@@ -50,13 +54,17 @@ const defaultshader = Shader.from(
     out vec4 outColor;
 
     uniform sampler2D u_texture;
+    uniform float u_opacity;
 
     void main() {
-        outColor = texture(u_texture, v_textureCoord);
+        vec4 color = texture(u_texture, v_textureCoord);
+
+        outColor = vec4(color.rgb, color.a * u_opacity);
     }`,
     new UniformGroup({
         u_texture: { type: 'int', value: 0 },
         u_matrix: { type: 'mat3x3<float>', value: [1, 0, 0, 0, 1, 0, 0, 0, 1] },
+        u_opacity: { type: 'float', value: 1.0 },
     })
 )
 
@@ -97,20 +105,39 @@ export class Sprite extends Container {
     }
 
     public render(renderer: WebGLRenderer, scene: Scene) {
-        scene.bind(renderer, scene.free)
-        this.excude(renderer, scene.width, scene.height)
+        const blendMode = BLEND_MODES[this.blendMode]
 
-        scene.bind(renderer, scene.current)
+        if (blendMode instanceof Shader) {
+            scene.clear(renderer, scene.free)
+            scene.bind(renderer, scene.free)
 
-        renderer.blendMode.blend(
-            scene.read(scene.previous),
-            scene.read(scene.free),
-            BLEND_MODES[this.blendMode],
-            this.opacity
-        )
+            this.excude(renderer, scene.width, scene.height)
 
-        // Advance the rendering cycle by one.
-        scene.spin()
+            scene.bind(renderer, scene.current)
+
+            renderer.blendMode.blend(
+                scene.read(scene.previous),
+                scene.read(scene.free),
+                BLEND_MODES[this.blendMode] as BlendModeShader,
+                1.0
+            )
+
+            // Advance the rendering cycle by one.
+            scene.spin()
+
+            return
+        } else {
+            scene.bind(renderer, scene.previous)
+
+            renderer.gl.blendFuncSeparate(
+                blendMode.srcRGB,
+                blendMode.dstRGB,
+                blendMode.srcAlpha,
+                blendMode.dstAlpha
+            )
+
+            this.excude(renderer, scene.width, scene.height)
+        }
     }
 
     public excude(renderer: WebGLRenderer, sceneWidth: number, sceneHeight: number) {
@@ -123,8 +150,7 @@ export class Sprite extends Container {
         )
 
         this._mesh.shader.uniforms.uniforms.u_matrix.value = projectionMatrix
-
-        renderer.clear()
+        this._mesh.shader.uniforms.uniforms.u_opacity.value = this.opacity
         renderer.mesh.excude(this._mesh)
     }
 
