@@ -14,6 +14,8 @@ export class ShaderManager {
     }
     public bind(shader: Shader) {
         if (this._activeShader === shader) {
+            this._renderer.uniforms.bind(shader.uniforms)
+
             return
         }
 
