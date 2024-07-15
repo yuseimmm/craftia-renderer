@@ -39,6 +39,8 @@ export class WebGLRenderer {
         this.blendMode = new BlendModeManager(this)
 
         this.resize(options.width, options.height)
+
+        this.gl.enable(WebGL2RenderingContext.BLEND)
     }
     public get width() {
         return this.gl.canvas.width
