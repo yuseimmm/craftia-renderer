@@ -1,3 +1,4 @@
+import { mat3 } from 'gl-matrix'
 import { IVec, Vec } from './Vec'
 export class Vec2 implements IVec {
     readonly x: number
@@ -64,5 +65,10 @@ export class Vec2 implements IVec {
     }
     public floor() {
         return new Vec2(Math.floor(this.x), Math.floor(this.y))
+    }
+    public transformMat3(m: mat3) {
+        const x = m[0] * this.x + m[3] * this.y + m[6]
+        const y = m[1] * this.x + m[4] * this.y + m[7]
+        return new Vec2(x, y)
     }
 }
