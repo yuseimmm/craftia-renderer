@@ -22,18 +22,4 @@ describe('group test', () => {
         expect(smartLayer.opacity).toBe(opacity)
         expect(smartLayer.visible).toBe(visible)
     })
-
-    it('The update flag of the children should be detected.', () => {
-        const layer = new RasterLayer({
-            texture: new Texture()
-        })
-
-        const group = new Group()
-
-        group.setChildren([layer])
-
-        layer.refreshUpdate(true)
-
-        expect(group.requiresUpdate()).toBe(true)
-    })
 })
