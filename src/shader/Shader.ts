@@ -44,3 +44,5 @@ export class Shader<UNIFORMS extends UniformGroup = UniformGroup> {
         return this
     }
 }
+
+export const SHADER_EMPTY = Shader.from('', '', new UniformGroup({}))
