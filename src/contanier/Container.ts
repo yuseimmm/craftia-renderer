@@ -3,6 +3,7 @@ import { BLEND_MODES } from '../blend-modes/BlendMode'
 import { Vec2 } from '../units'
 import { WebGLRenderer } from '../WebGLRenderer'
 import { Scene } from '../scene/Scene'
+import { Group } from '../group'
 
 export type ContainerParentProps = {
     opacity?: number
@@ -32,7 +33,7 @@ export class Container {
     private _opacity: number
     protected projectionMatrix: mat3
 
-    protected update: boolean
+    public parent?: Group
 
     constructor({
         blendMode,
@@ -52,8 +53,6 @@ export class Container {
         this._opacity = opacity ?? 1.0
 
         this.projectionMatrix = mat3.create()
-        this.update = false
-
         this.updateProjectionMatrix()
     }
 
@@ -63,7 +62,8 @@ export class Container {
 
     public set visible(visible: boolean) {
         this._visible = visible
-        this.update = true
+
+        this.onUpdate();
     }
 
     public get opacity() {
@@ -72,7 +72,8 @@ export class Container {
 
     public set opacity(opacity: number) {
         this._opacity = Math.max(Math.min(1, opacity), 0)
-        this.update = true
+
+        this.onUpdate();
     }
 
     public get blendMode() {
@@ -81,7 +82,8 @@ export class Container {
 
     public set blendMode(blendMode: keyof typeof BLEND_MODES) {
         this._blendMode = blendMode
-        this.update = true
+
+        this.onUpdate();
     }
 
     public get translation() {
@@ -90,9 +92,9 @@ export class Container {
 
     public set translation(translation: Vec2) {
         this._translation = translation
-
         this.updateProjectionMatrix()
-        this.update = true
+
+        this.onUpdate();
     }
 
     protected get rotation() {
@@ -101,9 +103,9 @@ export class Container {
 
     protected set rotation(rotation: number) {
         this._rotation = rotation
-
         this.updateProjectionMatrix()
-        this.update = true
+
+        this.onUpdate();
     }
 
     protected get transform() {
@@ -112,9 +114,9 @@ export class Container {
 
     protected set transform(transform: mat3) {
         this._transform = transform
-
         this.updateProjectionMatrix()
-        this.update = true
+
+        this.onUpdate();
     }
 
     protected get scaling() {
@@ -123,9 +125,9 @@ export class Container {
 
     protected set scaling(scaling: Vec2) {
         this._scaling = scaling
-
         this.updateProjectionMatrix()
-        this.update = true
+
+        this.onUpdate();
     }
 
     public updateProjectionMatrix() {
@@ -137,17 +139,13 @@ export class Container {
         mat3.multiply(this.projectionMatrix, this.projectionMatrix, this.transform)
     }
 
-    public requiresUpdate() {
-        return this.update
-    }
-
-    public refreshUpdate(update: boolean = true) {
-        this.update = update
-    }
-
     public getProjectionMatrix() {
         return this.projectionMatrix
     }
 
-    public render(renderer: WebGLRenderer, scene: Scene): void {} // eslint-disable-line
+    public onUpdate() {
+        this.parent?.onChildrenUpdate()
+    }
+
+    public render(renderer: WebGLRenderer, scene: Scene): void { } // eslint-disable-line
 }

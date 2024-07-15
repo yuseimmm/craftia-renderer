@@ -16,25 +16,42 @@ export type GroupOptions = {
 
 export class Group extends Sprite {
     protected _children: Container[]
-    public _localScene: Scene
+    protected _localScene: Scene
+    private _updateLocalScene: boolean
 
     constructor(options: GroupOptions = {}) {
         super({ ...options, texture: TEXTURE_EMPTY })
 
         this._children = []
         this._localScene = new Scene([new FrameBuffer(), new FrameBuffer(), new FrameBuffer()])
+        this._updateLocalScene = true
+    }
+
+    public setChildren(children: Container[]) {
+        this._children = children
+        this._children.forEach((c) => (c.parent = this))
+
+        this.onChildrenUpdate();
+    }
+
+    public onChildrenUpdate() {
+        this._updateLocalScene = true
+        this.parent?.onChildrenUpdate()
     }
 
     public updateLocalScene(renderer: WebGLRenderer) {
-        if (this.requiresUpdate()) {
+        if (this._updateLocalScene) {
+            renderer.viewport(0, 0, this._localScene.width, this._localScene.height)
+
+            this._localScene.clear(renderer, this._localScene.previous)
             this._localScene.clear(renderer, this._localScene.current)
 
             for (let i = 0; i < this._children.length; i++) {
                 this._children[i].render(renderer, this._localScene)
             }
-        }
 
-        this.refreshUpdate(false)
+            this._updateLocalScene = false
+        }
     }
 
     public render(renderer: WebGLRenderer, scene: Scene) {
@@ -45,32 +62,5 @@ export class Group extends Sprite {
 
         super.texture = this._localScene.read(this._localScene.previous)
         super.render(renderer, scene)
-    }
-
-    public setChildren(children: Container[]) {
-        this._children = children
-        this.update = true
-    }
-
-    public requiresUpdate(): boolean {
-        if (this.update) {
-            return true
-        }
-
-        for (let i = 0; i < this._children.length; i++) {
-            if (this._children[i].requiresUpdate()) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    public refreshUpdate(update: boolean = false) {
-        this.update = update
-
-        for (let i = 0; i < this._children.length; i++) {
-            this._children[i].refreshUpdate(update)
-        }
     }
 }
