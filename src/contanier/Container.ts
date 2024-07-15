@@ -63,7 +63,7 @@ export class Container {
     public set visible(visible: boolean) {
         this._visible = visible
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     public get opacity() {
@@ -73,7 +73,7 @@ export class Container {
     public set opacity(opacity: number) {
         this._opacity = Math.max(Math.min(1, opacity), 0)
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     public get blendMode() {
@@ -83,7 +83,7 @@ export class Container {
     public set blendMode(blendMode: keyof typeof BLEND_MODES) {
         this._blendMode = blendMode
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     public get translation() {
@@ -94,7 +94,7 @@ export class Container {
         this._translation = translation
         this.updateProjectionMatrix()
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     protected get rotation() {
@@ -105,7 +105,7 @@ export class Container {
         this._rotation = rotation
         this.updateProjectionMatrix()
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     protected get transform() {
@@ -116,7 +116,7 @@ export class Container {
         this._transform = transform
         this.updateProjectionMatrix()
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     protected get scaling() {
@@ -127,7 +127,7 @@ export class Container {
         this._scaling = scaling
         this.updateProjectionMatrix()
 
-        this.onUpdate();
+        this.onUpdate()
     }
 
     public updateProjectionMatrix() {
@@ -147,5 +147,5 @@ export class Container {
         this.parent?.onChildrenUpdate()
     }
 
-    public render(renderer: WebGLRenderer, scene: Scene): void { } // eslint-disable-line
+    public render(renderer: WebGLRenderer, scene: Scene): void {} // eslint-disable-line
 }

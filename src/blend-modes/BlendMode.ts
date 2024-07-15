@@ -39,9 +39,9 @@ export type BlendModeProps = {
 }
 
 export type BlendFuncProps = {
-    srcRGB: GLenum,
-    dstRGB: GLenum,
-    srcAlpha: GLenum,
+    srcRGB: GLenum
+    dstRGB: GLenum
+    srcAlpha: GLenum
     dstAlpha: GLenum
 }
 

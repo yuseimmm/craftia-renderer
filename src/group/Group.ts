@@ -31,7 +31,7 @@ export class Group extends Sprite {
         this._children = children
         this._children.forEach((c) => (c.parent = this))
 
-        this.onChildrenUpdate();
+        this.onChildrenUpdate()
     }
 
     public onChildrenUpdate() {
