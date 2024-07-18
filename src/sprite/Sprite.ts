@@ -14,11 +14,11 @@ export type SpriteOptions = {
     translation?: Vec2
     visible?: boolean
     opacity?: number
-    fill?: number
+    shader?: Shader<SpriteUniformGroup>
     texture: Texture
 }
 
-export type LayerUniformGroup = UniformGroup<{
+export type SpriteUniformGroup = UniformGroup<{
     u_texture: {
         type: 'int'
         value: number
