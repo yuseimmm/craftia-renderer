@@ -1,7 +1,5 @@
-import { RasterLayer } from '../src/layer';
 import { Group } from '../src/group';
 import { Vec2 } from '../src/units';
-import { Texture } from '../src/textures';
 
 describe('group test', () => {
     it('should accept constructor arguments', () => {
@@ -10,16 +8,16 @@ describe('group test', () => {
         const opacity = 0.1
         const visible = false
 
-        const smartLayer = new Group({
+        const group = new Group({
             translation,
             blendMode,
             opacity,
             visible
         });
 
-        expect(smartLayer.translation).toBe(translation)
-        expect(smartLayer.blendMode).toBe(blendMode)
-        expect(smartLayer.opacity).toBe(opacity)
-        expect(smartLayer.visible).toBe(visible)
+        expect(group.translation).toBe(translation)
+        expect(group.blendMode).toBe(blendMode)
+        expect(group.opacity).toBe(opacity)
+        expect(group.visible).toBe(visible)
     })
 })
