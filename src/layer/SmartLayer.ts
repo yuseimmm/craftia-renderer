@@ -24,9 +24,23 @@ export class SmartLayer extends Sprite {
 
     public clone(options: Partial<SmartLayerOptions>) {
         return new SmartLayer({
-            ...this,
+            ...this.getConfigs(),
+            transform: mat3.clone(this.transform),
             ...options,
         })
+    }
+
+    public getConfigs() {
+        return {
+            visible: this.visible,
+            blendMode: this.blendMode,
+            opacity: this.opacity,
+            translation: this.translation,
+            texture: this.texture,
+            scaling: this.scaling,
+            rotation: this.rotation,
+            transform: this.transform
+        }
     }
 
     public get texture() {
