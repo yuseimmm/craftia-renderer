@@ -63,6 +63,7 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             gl.uniform1i(this.location.get(), value)
             return
         }
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 
     private bindIterable(gl: WebGL2RenderingContext, value: Float32Array | number[]) {
@@ -70,6 +71,7 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             gl.uniformMatrix3fv(this.location.get(), false, value)
             return
         }
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 
     private bindVec2(gl: WebGL2RenderingContext, vec2: Vec2) {
@@ -81,6 +83,7 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             gl.uniform2i(this.location.get(), vec2.x, vec2.y)
             return
         }
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 
     private bindVec3(gl: WebGL2RenderingContext, vec3: Vec3) {
@@ -93,6 +96,7 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             gl.uniform3i(this.location.get(), vec3.x, vec3.y, vec3.z)
             return
         }
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 
     private bindVec4(gl: WebGL2RenderingContext, vec4: Vec4) {
@@ -105,5 +109,6 @@ export class Uniform<TYPE extends keyof UniformType = keyof UniformType> {
             gl.uniform4i(this.location.get(), vec4.x, vec4.y, vec4.z, vec4.w)
             return
         }
+        console.error('Uniform types do not match.', '  value:', this.value)
     }
 }
