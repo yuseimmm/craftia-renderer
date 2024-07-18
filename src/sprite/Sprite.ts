@@ -69,13 +69,15 @@ const defaultshader = Shader.from(
 )
 
 export class Sprite extends Container {
-    protected _mesh: Mesh<Shader<LayerUniformGroup>>
+    protected _mesh: Mesh<Shader<SpriteUniformGroup>>
+    private _meshWidth: number
+    private _meshHeight: number
 
     constructor(options: SpriteOptions) {
         super(options)
 
         this._mesh = new Mesh({
-            shader: defaultshader,
+            shader: options.shader || defaultshader,
             textures: {
                 [0]: options.texture,
             },
@@ -86,6 +88,9 @@ export class Sprite extends Container {
                 ),
             }),
         })
+
+        this._meshWidth = options.texture.width
+        this._meshHeight = options.texture.height
     }
 
     protected get texture() {
@@ -93,15 +98,11 @@ export class Sprite extends Container {
     }
 
     protected set texture(texture: Texture) {
-        if (
-            texture.width !== this._mesh.textures[0].width ||
-            texture.height !== this._mesh.textures[0].height
-        ) {
-            this._mesh.geometry.setPositions(
-                this._createVertexPositions(texture.width, texture.height)
-            )
-        }
         this._mesh.textures[0] = texture
+    }
+
+    public get shader() {
+        return this._mesh.shader
     }
 
     public render(renderer: WebGLRenderer, scene: Scene) {
@@ -141,6 +142,18 @@ export class Sprite extends Container {
     }
 
     public excude(renderer: WebGLRenderer, sceneWidth: number, sceneHeight: number) {
+        if (
+            this._mesh.textures[0].width !== this._meshWidth ||
+            this._mesh.textures[0].height !== this._meshHeight
+        ) {
+            this._mesh.geometry.setPositions(
+                this._createVertexPositions(
+                    this._mesh.textures[0].width,
+                    this._mesh.textures[0].height
+                )
+            )
+        }
+
         const projectionMatrix = mat3.create()
 
         mat3.multiply(
