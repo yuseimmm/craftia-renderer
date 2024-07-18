@@ -46,6 +46,18 @@ export class Stage extends Group {
         super.scaling = scaling
     }
 
+    public get width() {
+        return this._localScene.width
+    }
+
+    public get height() {
+        return this._localScene.height
+    }
+
+    public getRenderer() {
+        return this._renderer
+    }
+
     public freeze() {
         this._freeze = true
     }
