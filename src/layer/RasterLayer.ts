@@ -6,13 +6,19 @@ export type RasterLayerOptions = SpriteOptions
 export class RasterLayer extends Sprite {
     public clone(options: Partial<RasterLayerOptions>) {
         return new RasterLayer({
+            ...this.getConfigs(),
+            ...options,
+        })
+    }
+
+    public getConfigs() {
+        return {
             visible: this.visible,
             blendMode: this.blendMode,
             opacity: this.opacity,
             translation: this.translation,
             texture: this.texture,
-            ...options,
-        })
+        }
     }
 
     public get texture() {
